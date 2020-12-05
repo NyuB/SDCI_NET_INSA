@@ -1,0 +1,23 @@
+Après vim-emu start, les alpines ne disposent pas d'addresse IP dans le réseau
+Résultat ifconfig juste après déploiement, avec ubuntu:trusty en comparaison
+
+bash>vim-emu compute start -n nod -d dc1 -i server:proto
+
+containernet> nod ifconfig
+nod-eth0  Link encap:Ethernet  HWaddr 86:D8:A4:FE:58:C0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:14 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:900 (900.0 B)  TX bytes:0 (0.0 B)
+
+bash>vim-emu compute start -n ubu -d dc1 -i ubuntu:trusty
+
+containernet> ubu ifconfig
+ubu-eth0  Link encap:Ethernet  HWaddr 2a:98:8f:60:f8:38
+          inet addr:10.0.0.6  Bcast:10.255.255.255  Mask:255.0.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:8 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:648 (648.0 B)  TX bytes:0 (0.0 B)
