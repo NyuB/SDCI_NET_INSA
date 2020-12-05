@@ -60,7 +60,9 @@ def create_topology():
     
     s1 = net.addSwitch('s1')
     h1 = net.addHost('h1')
+    h2 = net.addDocker('h2',dimage='host:server')
     net.addLink(h1, s1, delay='20ms')
+    net.addLink(h2, s1, delay='20ms')
     net.addLink(dc1, s1, delay='20ms')
     
     net.start()
