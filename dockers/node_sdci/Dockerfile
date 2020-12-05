@@ -28,7 +28,8 @@ RUN 	apt-get update \
 	&& npm install http-forward \
 	&& npm install express \
 	&& npm install yargs \
-	&& npm install systeminformation
+	&& npm install systeminformation \
+	&& npm install request
 	#\NPM
 # VIM-EMU-Requirement : CMD should always point to /bin/bash to not block the emulator
 CMD /bin/bash
