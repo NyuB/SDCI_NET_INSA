@@ -1,0 +1,15 @@
+image>>
+tag=make:base
+dir=base
+
+image>>
+tag=make:one
+dir=one
+
+image>>
+tag=make:oneone
+dir=oneone
+
+image>>
+tag=make:two
+dir=two
