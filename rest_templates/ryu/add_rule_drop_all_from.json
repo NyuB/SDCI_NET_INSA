@@ -1,0 +1,18 @@
+{
+	"dpid":1,
+	"table_id":0,
+	"cookie":0,
+	"cookie_mask":0,
+	"idle_timeout":30,
+	"hard_timeout":30,
+	"priority":0,
+	"flags":0,
+	"match":
+		{
+			"ipv4_src":"10.0.0.1"
+		},
+	"actions":
+		{
+			"type":"DROP"
+		}
+}
