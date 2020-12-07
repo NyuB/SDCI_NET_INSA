@@ -1,0 +1,11 @@
+image>>
+tag=node:sdci
+dir=node_sdci
+
+image>>
+tag=host:test
+dir=hosts/host_test
+
+image>>
+tag=vnf:test
+dir=vnf/vnf_test

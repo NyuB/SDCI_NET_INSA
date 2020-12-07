@@ -24,8 +24,9 @@
 # acknowledge the contributions of their colleagues of the SONATA
 # partner consortium (www.sonata-nfv.eu).
 import logging
+import sys
 from mininet.log import setLogLevel
-from emuvim.DCemulator.net import DCNetwork
+from emuvim.dcemulator.net import DCNetwork
 from emuvim.api.rest.rest_api_endpoint import RestApiEndpoint
 from emuvim.api.openstack.openstack_api_endpoint import OpenstackApiEndpoint
 
@@ -43,7 +44,13 @@ logging.getLogger('api.openstack.glance').setLevel(logging.DEBUG)
 logging.getLogger('api.openstack.helper').setLevel(logging.DEBUG)
 
 
-def create_topology():
+def createHost(httpmode, net, name):
+    if httpmode:
+        return net.addDocker(name, dimage = "host:test")
+    else:
+        return net.addHost(name)
+
+def create_topology(httpmode=False):
     net = DCNetwork(monitor=False, enable_learning=True)
 
     DC = net.addDatacenter("DC")
@@ -52,7 +59,7 @@ def create_topology():
     api1 = OpenstackApiEndpoint("0.0.0.0", 6001)
     api1.connect_datacenter(DC)
     api1.start()
-    api1.connect_DC_network(net)
+    api1.connect_dc_network(net)
 
     # add the command line interface endpoint to the emulated DC (REST API)
     rapi1 = RestApiEndpoint("0.0.0.0", 5001)
@@ -65,23 +72,23 @@ def create_topology():
     s3 = net.addSwitch('s3')
     s4 = net.addSwitch('s4')
 
-    S = net.addHost('S')
-    GI = net.addHost('GI')
-    GFA = net.addHost('GFA')
-    GFB = net.addHost('GFA')
-    GFB = net.addHost('GFA')
+    S = createHost(httpmode, net, 'S')
+    GI = createHost(httpmode, net, 'GI')
+    GFA = createHost(httpmode, net, 'GFA')
+    GFB = createHost(httpmode, net, 'GFB')
+    GFC = createHost(httpmode, net, 'GFC')
 
-    net.addLink(S, s1, delay = '20ms')
-    net.addLink(GI, s2, delay = '20ms')
-    net.addLink(GFA, s3, delay = '20ms')
-    net.addLink(GFB, s3, delay = '20ms')
-    net.addLink(GFC, s4, delay = '20ms')
+    net.addLink(S, s1)
+    net.addLink(GI, s2)
+    net.addLink(GFA, s3)
+    net.addLink(GFB, s3)
+    net.addLink(GFC, s4)
 
-    net.addLink(s1, s2, delay = '20ms')
-    net.addLink(s2, s3, delay = '20ms')
-    net.addLink(s2, s4, delay = '20ms')
-    net.addLink(s3, s4, delay = '20ms')
-    net.addLink(DC, s4, delay = '20ms')
+    net.addLink(s1, s2)
+    net.addLink(s2, s3)
+    net.addLink(s2, s4)
+    #net.addLink(s3, s4) avoid loop for now, keep a tree structure
+    net.addLink(DC, s4)
 
     #Do not remove
     net.start()
@@ -91,8 +98,8 @@ def create_topology():
 
 
 def main():
-    create_topology()
-
-
+    args = sys.argv[1:]
+    httpmode = len(args)>0 and args[0] == "http"
+    create_topology(httpmode)
 if __name__ == '__main__':
     main()

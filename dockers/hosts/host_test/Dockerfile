@@ -1,10 +1,10 @@
+#exec node_startup to start server
 FROM node:sdci
 
 WORKDIR	/
 
 ADD ./server.js /home/server.js
-
-#ending '&' IS IMPORTANT
-ENTRYPOINT node /home/server.js --local_ip 127.0.0.1 --local_port 8888 --local_name srv & tail -f /dev/null
+ADD ./startup /bin/startup
+RUN chmod +x /bin/startup 
 
 CMD /bin/bash

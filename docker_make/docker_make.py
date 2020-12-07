@@ -112,6 +112,7 @@ def remove_image(tag, dck=dck):
 	dck.images.remove(image=tag)
 
 def build_image(tag,infos, dck = dck):
+	print("Building image :",tag)
 	img=dck.images.build(path=infos[tag].dir, rm=True)
 	t1, t2 = tag.split(':')
 	img.tag(t1,tag=t2)

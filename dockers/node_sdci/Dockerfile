@@ -20,6 +20,7 @@ RUN 	apt-get update \
 	#UTILS
 	#procps allows to use ps => usefull to verify if a node server is actually running
 	&& apt-get install procps -y \
+	&& apt-get install iputils-ping -y \
 	#curl allows to test http connectitvity between containernet hosts
 	&& apt-get install curl -y \
 	#\UTILS
