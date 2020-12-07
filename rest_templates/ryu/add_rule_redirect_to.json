@@ -9,8 +9,12 @@
 	"flags":0,
 	"match":
 		{
-			"ipv4_src":"10.0.0.1"
+			"ipv4_dst":"10.0.0.1"
 		},
-	"actions":[]
+	"actions":
+		[
+			{"type":"SET_FIELD","field":"ipv4_dst","value":"10.0.0.2"},
+			{"type":"OUTPUT", "port":1}
+		]
 		
 }
