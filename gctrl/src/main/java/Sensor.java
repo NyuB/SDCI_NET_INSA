@@ -6,21 +6,6 @@ import java.net.URL ;
 
 import org.springframework.web.client.RestTemplate;
 
-class PongModel {
-
-    private int pong ;
-
-    public PongModel() {}
-
-    public void setPong(int pong) {
-        this.pong = pong ;
-    }    
-
-    public int getPong() {
-        return this.pong ;
-    } 
-}
-
 public class Sensor {
 
     private String url ;
