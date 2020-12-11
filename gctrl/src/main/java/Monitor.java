@@ -3,6 +3,9 @@ import com.github.signaflo.timeseries.TimeSeries;
 import com.github.signaflo.timeseries.forecast.Forecast;
 import com.github.signaflo.timeseries.model.arima.Arima;
 import com.github.signaflo.timeseries.model.arima.ArimaOrder;
+
+import api.gates.GatewayAPIEndpoint;
+import api.gates.PingResponse;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestWord;
 import de.vandermeer.asciithemes.a7.A7_Grids;
@@ -35,6 +38,7 @@ class Monitor {
     private static List<String> symptom;
     private static final int period = 2000;
     private static double i = 0;
+    public GatewayAPIEndpoint gw_sensor = new GatewayAPIEndpoint("http://127.0.0.1:8181/") ;
     public String gw_current_SYMP = "N/A";
 
     void start() {
@@ -84,7 +88,7 @@ class Monitor {
                 try {
                     //TODO: Remove this
                     Thread.sleep(period);
-                    Main.shared_knowledge.insert_in_tab(new java.sql.Timestamp(new java.util.Date().getTime()), get_fake_data());
+                    Main.shared_knowledge.insert_in_tab(new java.sql.Timestamp(new java.util.Date().getTime()), get_data());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -94,10 +98,13 @@ class Monitor {
         ).start();
     }
 
+    //metrique possible : ping / RAM/ CPU/
     private int get_data() {
         //Call Sensors
-        /*TODO*/
-        return 0;
+        long start = new java.util.Date().getTime() ;
+        PingResponse ping = gw_sensor.getRestPing() ;
+        int time = (int) (ping.getPong() - start ) ;
+        return time;
     }
 
     private double get_fake_data() {
