@@ -1,0 +1,2 @@
+eth_type IS MANDATORY when matching ipv4 addr
+use "0x0800" (2048)
