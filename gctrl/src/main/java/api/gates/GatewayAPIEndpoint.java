@@ -1,30 +1,36 @@
+package api.gates;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader ;
 import java.net.HttpURLConnection ;
 import java.net.URL ;
 
-import org.springframework.web.client.RestTemplate;
+import api.RestAPIEndpoint;
 
-public class Sensor {
+public class GatewayAPIEndpoint extends RestAPIEndpoint {
 
-    private String url ;
-
-    public Sensor(String url) {
-        this.url = url ;
-    }
-
-    public static void main(String[] args) throws IOException {
-		sendGetREST();
-		System.out.println("GET DONE");
+	public GatewayAPIEndpoint(String endpoint) {
+		super(endpoint);
 	}
 
-    public static void sendGetREST() {
-        RestTemplate rt = new RestTemplate() ;
-        String geturl = "http://127.0.0.1:8181/ping" ;
-        PongModel pm = rt.getForObject(geturl, PongModel.class) ;
-        System.out.print(pm.getPong()) ;
-    }
+	public static void main(String[] args) throws IOException {
+		System.out.println("Testing class : "+ GatewayAPIEndpoint.class.getName());
+		if(args.length==0){
+			System.out.println("Provide api endpoint as command line argument");
+		}
+		else{
+			GatewayAPIEndpoint test = new GatewayAPIEndpoint(args[0]);
+			PingResponse pong = test.getRestPing();
+			System.out.println("Received pong value : "+pong.getPong());
+			System.out.println("GET DONE");
+		}
+	}
+
+	public PingResponse getRestPing(){
+    	return rest.getForObject(endpoint+"ping",PingResponse.class);
+	}
+
 
     public static void sendGet(String info) throws IOException {
         URL urlGet = new URL("http://127.0.0.1:8181"+info) ;
@@ -49,6 +55,5 @@ public class Sensor {
         else {
 			System.out.println("GET request not worked");
         }
-
     }
 }
