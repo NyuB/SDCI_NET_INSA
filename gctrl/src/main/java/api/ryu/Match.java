@@ -1,13 +1,20 @@
 package api.ryu;
 
-import java.util.HashMap;
-
 public class Match {
 	//Null fields will not be serialized by Gson
 	private String ipv4_src = null;
 	private String ipv4_dst = null;
 	private String eth_type = null;
 	private Integer in_port = null;
+	private static final String DEFAULT_ETH_TYPE = "0x0800";
+
+	public static Match  Ipv4SrcDest(String src, String dest){
+		Match res = new Match();
+		res.ipv4_src = src;
+		res.ipv4_dst = dest;
+		res.eth_type = DEFAULT_ETH_TYPE;
+		return res;
+	}
 
 	public Match(){
 

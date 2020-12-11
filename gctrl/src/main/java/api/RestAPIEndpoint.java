@@ -4,6 +4,9 @@ public class RestAPIEndpoint {
 	protected String endpoint;
 
 	public RestAPIEndpoint(String endpoint){
+		if(!endpoint.endsWith("/")){
+			endpoint = endpoint+"/";
+		}
 		this.endpoint = endpoint;
 	}
 }
