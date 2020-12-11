@@ -1,0 +1,8 @@
+Loops = nécessité d'ajouter des règles
+
+Par exemple en triangle s1--s2
+						s2--s3
+						s3--s1
+Impossible de ping => "Host unreachable"
+Les paquets se perdent dans le réseau, chaque switch redirigeant le paquet à l'infini vers ses voisins
+Solutions => pas de réseau en boucle ou bien ajout de règles de flot initiales
