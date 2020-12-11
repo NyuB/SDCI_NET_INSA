@@ -1,3 +1,6 @@
 node:sdci
 	vnf:test
 	host:test
+	host:gateway
+	host:device
+	host:server

@@ -7,5 +7,17 @@ tag=host:test
 dir=hosts/host_test
 
 image>>
+tag=host:device
+dir=hosts/host_device
+
+image>>
+tag=host:gateway
+dir=hosts/host_gateway
+
+image>>
+tag=host:server
+dir=hosts/host_server
+
+image>>
 tag=vnf:test
 dir=vnf/vnf_test
