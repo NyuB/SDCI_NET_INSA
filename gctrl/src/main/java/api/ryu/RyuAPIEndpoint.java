@@ -10,4 +10,10 @@ public class RyuAPIEndpoint extends RestAPIEndpoint {
 	public void postRestAddFlowRule(FlowRule flowRule){
 		Object ok = rest.postForObject(endpoint+"stats/flowentry/add",flowRule,Object.class);
 	}
+
+	public void postRestDeleteFlowRule(FlowRule flowRule){
+		Object ok = rest.postForObject(endpoint+"stats/flowentry/delete",flowRule,Object.class);
+	}
+
+
 }

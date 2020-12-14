@@ -16,6 +16,14 @@ public class Match {
 		return res;
 	}
 
+	public static Match  Ipv4Src(String src){
+		Match res = new Match();
+		res.ipv4_src = src;
+		res.eth_type = DEFAULT_ETH_TYPE;
+		return res;
+	}
+
+
 	public Match(){
 
 	}

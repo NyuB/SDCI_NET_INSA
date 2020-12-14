@@ -12,7 +12,7 @@ public class FlowRule {
 	private Integer flags = null;
 	private Integer cookie=null;
 	private Integer cookie_mask = null;
-	private List<Action> actions = Action.DROP;
+	private List<Action> actions = Action.DROP();
 	private Match match = new Match();
 
 	public static FlowRule DropIpv4(int switchId, int priority,String src,String dest){
@@ -21,6 +21,17 @@ public class FlowRule {
 		res.priority = priority;
 		Match match = Match.Ipv4SrcDest(src,dest);
 		res.match = match;
+		return res;
+	}
+
+	public static FlowRule RedirectIpv4(int switchId, int priority, String src, String newDest, int newPort){
+		FlowRule res = new FlowRule();
+		res.dpid = switchId;
+		res.priority = priority;
+		Match match = Match.Ipv4Src(src);
+		res.match = match;
+		res.actions.add(Action.SwitchIPDest(newDest));
+		res.actions.add(Action.Output(newPort));
 		return res;
 	}
 
