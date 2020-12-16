@@ -1,5 +1,6 @@
 import api.ryu.FlowRule;
 import api.ryu.RyuAPIEndpoint;
+import api.vim.ComputeStart;
 import api.vim.VimEmuAPIEndpoint;
 import api.vim.Vnf;
 
@@ -7,13 +8,19 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Manual {
+
+	public static String askNextLine(Scanner in){
+		System.out.println("Enter command");
+		return in.nextLine();
+	}
+
 	public static void main(String[] args) throws IOException {
 		RyuAPIEndpoint ryu = new RyuAPIEndpoint("http://localhost:8080");
 		VimEmuAPIEndpoint vim = new VimEmuAPIEndpoint("http://localhost:5001");
 		Scanner in = new Scanner(System.in);
 		String line;
 		System.out.println("Enter command");
-		while((line=in.nextLine())!=null && !line.equals("")){
+		while((line=askNextLine(in))!=null && !line.equals("")){
 			String[] cmd = line.split(" ");
 			if(cmd.length==0){
 				System.out.println("Enter command");
@@ -35,8 +42,18 @@ public class Manual {
 				ryu.postRestAddFlowRule(flowRule);
 
 			}
-			else if(cmd[0].equals("vnf")){
-				Vnf vnf = vim.putRestComputeStart(cmd[1], cmd[2], cmd[3]);
+			else if(cmd[0].equals("vnf")){//datacenter image vnf [dockercommands,...]
+				ComputeStart computeStart = new ComputeStart();
+				computeStart.setImage(cmd[2]);
+				if(cmd.length>4){
+					String dcmd = "";
+					for(int i=4;i<cmd.length;i++){
+						if(i!=4)dcmd+=" ";
+						dcmd+=cmd[i];
+					}
+					computeStart.setDocker_command(dcmd);
+				}
+				Vnf vnf = vim.putRestComputeStart(computeStart,cmd[1],cmd[3]);
 				System.out.println(vnf);
 			}
 			else{

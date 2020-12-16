@@ -43,7 +43,7 @@ public class Action  {
 		res.type = SET_FIELD;
 		res.field = field;
 		res.value = value;
-
+		return res;
 	}
 
 	public Action() {

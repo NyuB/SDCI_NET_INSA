@@ -8,11 +8,9 @@ public class VimEmuAPIEndpoint extends RestAPIEndpoint {
 		this.endpoint += "restapi/";
 	}
 
-	public Vnf putRestComputeStart(String datacenter, String image, String vnfName) {
-		ComputeStart req = new ComputeStart();
-		req.setImage(image);
+	public Vnf putRestComputeStart(ComputeStart compute, String datacenter, String vnfName){
 		String url=endpoint + "compute/" + datacenter + "/" + vnfName;
 		System.out.println("URL : "+url);
-		return rest.putForObject(url, req, Vnf.class);
+		return rest.putForObject(url, compute, Vnf.class);
 	}
 }
