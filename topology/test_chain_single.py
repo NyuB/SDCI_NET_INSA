@@ -56,6 +56,18 @@ def createGW(httpmode, net, name):
     else:
         return net.addHost(name)
 
+def createDV(httpmode, net, name):
+    if httpmode:
+        return net.addDocker(name, dimage = "host:device")
+    else:
+        return net.addHost(name)
+
+def createSRV(httpmode, net, name):
+    if httpmode:
+        return net.addDocker(name, dimage = "host:device")
+    else:
+        return net.addHost(name)
+
 def create_topology(httpmode=False):
     net = DCNetwork(monitor=False, enable_learning=True)
 
@@ -73,37 +85,31 @@ def create_topology(httpmode=False):
     rapi1.connectDatacenter(DC)
     rapi1.start()
     
-    #Generation Switch
+    #Generation Switches
     s1 = net.addSwitch('s1')
     s2 = net.addSwitch('s2')
     s3 = net.addSwitch('s3')
-    s4 = net.addSwitch('s4')
-
+    #Generation Hosts
     S = createHost(httpmode, net, 'S')
-    GI = createHost(httpmode, net, 'GI')
-    GFA = createHost(httpmode, net, 'GFA')
-    GFB = createHost(httpmode, net, 'GFB')
-    GFC = createHost(httpmode, net, 'GFC')
-
-    #Run Services
-    S.cmd("startup --local_ip 127.0.0.1 --local_port 8080 --local_name srv")
-    GI.cmd("startup  --local_ip 127.0.0.1 --local_port 8181 --local_name gwi --remote_ip 127.0.0.1 --remote_port 8080 --remote_name srv")
-    GFA.cmd("startup  --local_ip 127.0.0.1 --local_port 8282 --local_name gwfa --remote_ip 127.0.0.1 --remote_port 8181 --remote_name gwi")
-    GFB.cmd("startup  --local_ip 127.0.0.1 --local_port 8383 --local_name gwfb --remote_ip 127.0.0.1 --remote_port 8181 --remote_name gwi")
-    GFC.cmd("startup  --local_ip 127.0.0.1 --local_port 8484 --local_name gwfc --remote_ip 127.0.0.1 --remote_port 8181 --remote_name gwi")
-
-    #Genration of link
+    GI = createGW(httpmode, net, 'GI')
+    GFA = createGW(httpmode, net, 'GFA')
+    DVA = createDV(httpmode, net, 'DVA')
+    
+    #Generation Links
     net.addLink(S, s1)
     net.addLink(GI, s2)
     net.addLink(GFA, s3)
-    net.addLink(GFB, s3)
-    net.addLink(GFC, s4)
-
+    net.addLink(DVA, s3)
     net.addLink(s1, s2)
     net.addLink(s2, s3)
-    net.addLink(s2, s4)
-    net.addLink(DC, s4)
-
+    net.addLink(DC, s3)
+    #Run Services (in order)
+    if httpmode:
+        S.cmd("startup --local_ip 10.0.0.1 --local_port 8080 --local_name srv")
+        GI.cmd("startup  --local_ip 10.0.0.2 --local_port 8181 --local_name gwi --remote_ip 10.0.0.1 --remote_port 8080 --remote_name srv")
+        GFA.cmd("startup  --local_ip 10.0.0.3 --local_port 8282 --local_name gwfa --remote_ip 10.0.0.2 --remote_port 8181 --remote_name gwi")
+        DVA.cmd("startup  --local_ip 10.0.0.4 --local_port 8888 --local_name dva --remote_ip 10.0.0.3 --remote_port 8282 --remote_name gfa --send_period 3000")
+    
     #Do not remove
     net.start()
     net.CLI()
