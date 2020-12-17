@@ -39,6 +39,13 @@ public class FlowRule {
 
 	}
 
+	public void queueAction(Action a){
+		this.actions.add(a);
+	}
+	public void topAction(Action a){
+		this.actions.add(0,a);
+	}
+
 	public int getDpid() {
 		return dpid;
 	}

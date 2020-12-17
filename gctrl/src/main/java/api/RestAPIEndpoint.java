@@ -1,7 +1,7 @@
 package api;
 
 public class RestAPIEndpoint {
-	protected JsonRestTemplate rest = new JsonRestTemplate();
+	protected GsonRestTemplate rest = new GsonRestTemplate();
 	protected String endpoint;
 
 	public RestAPIEndpoint(String endpoint) {

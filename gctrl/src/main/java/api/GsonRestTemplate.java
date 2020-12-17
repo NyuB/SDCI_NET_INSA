@@ -8,8 +8,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
-public class JsonRestTemplate extends RestTemplate {
-	public JsonRestTemplate() {
+public class GsonRestTemplate extends RestTemplate {
+	public GsonRestTemplate() {
 		super(Arrays.asList(new HttpMessageConverter<?>[]{new GsonHttpMessageConverter()}));
 	}
 

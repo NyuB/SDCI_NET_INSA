@@ -15,7 +15,7 @@ var argv = require('yargs').argv;
 // --remote_ip
 // --remote_port
 // --remote_name
-// --send_period 
+// --send_period (ms)
 
 var LOCAL_ENDPOINT = {IP : argv.local_ip, PORT : argv.local_port, NAME : argv.local_name};
 var REMOTE_ENDPOINT = {IP : argv.remote_ip, PORT : argv.remote_port, NAME : argv.remote_name};

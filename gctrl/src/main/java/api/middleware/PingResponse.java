@@ -1,4 +1,4 @@
-package api.gates;
+package api.middleware;
 
 public class PingResponse {
 

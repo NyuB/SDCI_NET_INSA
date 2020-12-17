@@ -4,7 +4,7 @@
  *  Version : 0.1.0
  */
 var request = require('request');
-var http = require('http')
+var http = require('http');
 const si = require('systeminformation');
 const forward = require('http-forward');
 var argv = require('yargs').argv;

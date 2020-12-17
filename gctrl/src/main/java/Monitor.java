@@ -4,8 +4,8 @@ import com.github.signaflo.timeseries.forecast.Forecast;
 import com.github.signaflo.timeseries.model.arima.Arima;
 import com.github.signaflo.timeseries.model.arima.ArimaOrder;
 
-import api.gates.GatewayAPIEndpoint;
-import api.gates.PingResponse;
+import api.middleware.GatewayAPIEndpoint;
+import api.middleware.PingResponse;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestWord;
 import de.vandermeer.asciithemes.a7.A7_Grids;
