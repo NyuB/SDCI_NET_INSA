@@ -21,3 +21,11 @@ dir=hosts/host_server
 image>>
 tag=vnf:test
 dir=vnf/vnf_test
+
+image>>
+tag=vnf:gateway
+dir=vnf/vnf_gateway
+
+image>>
+tag=vnf:lb
+dir=vnf/vnf_lb
