@@ -16,7 +16,7 @@ var argv = require('yargs').argv;
 
 var LOCAL_PORT = argv.port
 var ENDPOINT_A = {IP : argv.ip_A, PORT : argv.port_A};
-var ENDPOINT_A = {IP : argv.ip_B, PORT : argv.port_B};
+var ENDPOINT_B = {IP : argv.ip_B, PORT : argv.port_B};
 var index = 1;
 http.createServer(function (req, res) {
 	index = 1 - index;
