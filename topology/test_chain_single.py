@@ -89,6 +89,7 @@ def create_topology(httpmode=False):
     s1 = net.addSwitch('s1')
     s2 = net.addSwitch('s2')
     s3 = net.addSwitch('s3')
+
     #Generation Hosts
     S = createHost(httpmode, net, 'S')
     GI = createGW(httpmode, net, 'GI')
@@ -103,6 +104,7 @@ def create_topology(httpmode=False):
     net.addLink(s1, s2)
     net.addLink(s2, s3)
     net.addLink(DC, s3)
+    
     #Run Services (in order)
     if httpmode:
         S.cmd("startup --local_ip 10.0.0.1 --local_port 8080 --local_name srv")
