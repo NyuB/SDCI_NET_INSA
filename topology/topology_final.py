@@ -44,15 +44,9 @@ logging.getLogger('api.openstack.glance').setLevel(logging.DEBUG)
 logging.getLogger('api.openstack.helper').setLevel(logging.DEBUG)
 
 
-def createHost(httpmode, net, name):
+def createHost(httpmode, net, name, image):
     if httpmode:
-        return net.addDocker(name, dimage = "host:server")
-    else:
-        return net.addHost(name)
-
-def createGW(httpmode, net, name):
-    if httpmode:
-        return net.addDocker(name, dimage = "host:gateway")
+        return net.addDocker(name, dimage = image)
     else:
         return net.addHost(name)
 
@@ -78,19 +72,24 @@ def create_topology(httpmode=False):
     s2 = net.addSwitch('s2')
     s3 = net.addSwitch('s3')
     s4 = net.addSwitch('s4')
+    s5 = net.addSwitch('s5')
 
-    S = createHost(httpmode, net, 'S')
-    GI = createHost(httpmode, net, 'GI')
-    GFA = createHost(httpmode, net, 'GFA')
-    GFB = createHost(httpmode, net, 'GFB')
-    GFC = createHost(httpmode, net, 'GFC')
+    S = createHost(httpmode, net, 'S', "host:server")
+    # Proxy = createHost(httpmode, net, 'Proxy')
+    GI = createHost(httpmode, net, 'GI', "host:gateway")
+    GFA = createHost(httpmode, net, 'GFA', "host:gwfinal")
+    GFB = createHost(httpmode, net, 'GFB', "host:gwfinal")
+    GFC = createHost(httpmode, net, 'GFC', "host:gwfinal")
 
     #Run Services
-    S.cmd("startup --local_ip 127.0.0.1 --local_port 8080 --local_name srv")
-    GI.cmd("startup  --local_ip 127.0.0.1 --local_port 8181 --local_name gwi --remote_ip 127.0.0.1 --remote_port 8080 --remote_name srv")
-    GFA.cmd("startup  --local_ip 127.0.0.1 --local_port 8282 --local_name gwfa --remote_ip 127.0.0.1 --remote_port 8181 --remote_name gwi")
-    GFB.cmd("startup  --local_ip 127.0.0.1 --local_port 8383 --local_name gwfb --remote_ip 127.0.0.1 --remote_port 8181 --remote_name gwi")
-    GFC.cmd("startup  --local_ip 127.0.0.1 --local_port 8484 --local_name gwfc --remote_ip 127.0.0.1 --remote_port 8181 --remote_name gwi")
+    S.cmd("startup --local_ip 10.0.0.1 --local_port 8080 --local_name srv")
+    GI.cmd("startup --local_ip 10.0.0.2 --local_port 8181 --local_name gwi --remote_ip 10.0.0.2 --remote_port 8080 --remote_name srv")
+    GFA.cmd("startup --local_ip 10.0.0.3 --local_port 8282 --local_name gwfa --remote_ip 10.0.0.3 --remote_port 8181 --remote_name gwi")
+    GFA.cmd("start_devices 10.0.0.3 9001 8282 gwfa 3000")
+    GFB.cmd("startup --local_ip 10.0.0.4 --local_port 8383 --local_name gwfb --remote_ip 10.0.0.4 --remote_port 8181 --remote_name gwi")
+    GFB.cmd("start_devices 10.0.0.4 9001 8383 gwfb 5000")
+    GFC.cmd("startup --local_ip 10.0.0.5 --local_port 8484 --local_name gwfc --remote_ip 10.0.0.5 --remote_port 8181 --remote_name gwi")
+
 
     #Genration of link
     net.addLink(S, s1)
