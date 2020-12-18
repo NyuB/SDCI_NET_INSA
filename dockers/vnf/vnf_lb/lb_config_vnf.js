@@ -36,13 +36,12 @@ http.createServer(function (req, res) {
     			data += chunk;
   		});
   		req.on('end', () => {
-    			parsed = JSON.parse(data);
+    		parsed = JSON.parse(data);
 			ENDPOINT_A = {IP : parsed.ip_A, PORT : parsed.port_A};
 			ENDPOINT_B = {IP : parsed.ip_B, PORT : parsed.port_B};
 			configured=true;
 		});
 		res.write("Ack\n");
 		res.end();
-		
 	}
 }).listen(LOCAL_PORT);

@@ -7,6 +7,8 @@ import api.ryu.RyuAPIEndpoint;
 import api.vim.ComputeStart;
 import api.vim.VimEmuAPIEndpoint;
 import api.vim.Vnf;
+import api.vnfconfig.VnfConfig;
+import api.vnfconfig.VnfConfigAPIEndpoint;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -113,9 +115,16 @@ public class Manual {
 					ryu.postRestAddFlowRule(second);
 				}
 			}
+			else if (cmd[0].equals("vnfconfig")){//vnfconfig 172.0.0.2 ip_A=10.0.0.3 ip_B=10.0.0.4
+				String ipVnf = cmd[1];
+				Map<String,String> options = parseOptions(cmd,"=",2);
+				VnfConfig config = new VnfConfig(options);
+				VnfConfigAPIEndpoint endpoint = new VnfConfigAPIEndpoint("hhtp://"+ipVnf+":8888");
+				endpoint.putRestConfig(config);
+			}
 			else if (cmd[0].equals("ping")){
 				String endpoint = "http://"+cmd[1];
-				GatewayAPIEndpoint test = new GatewayAPIEndpoint(args[0]);
+				GatewayAPIEndpoint test = new GatewayAPIEndpoint(endpoint);
 				PingResponse pong = test.getRestPing();
 				System.out.println("Received pong value : " + pong.getPong());
 			}

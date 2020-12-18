@@ -10,7 +10,6 @@ app.use(express.json()) // for parsing application/json
 
 var request = require('request');
 const si = require('systeminformation');
-var argv = require('yargs').argv;
 // --local_ip
 // --local_port
 // --local_name
@@ -18,8 +17,10 @@ var argv = require('yargs').argv;
 // --remote_port
 // --remote_name
 
-var LOCAL_ENDPOINT = {IP : argv.local_ip, PORT : argv.local_port, NAME : argv.local_name};
-var REMOTE_ENDPOINT = {IP : argv.remote_ip, PORT : argv.remote_port, NAME : argv.remote_name};
+var LOCAL_PORT = 8888;
+var LOCAL_ENDPOINT;//{IP : argv.local_ip, PORT : argv.local_port, NAME : argv.local_name};
+var REMOTE_ENDPOINT;// {IP : argv.remote_ip, PORT : argv.remote_port, NAME : argv.remote_name};
+var configured = false;
 
 const E_OK              = 200;
 const E_CREATED         = 201;
@@ -126,8 +127,16 @@ app.get('/health', function(req, res) {
     })
 });
 
+//VNF configuration
+app.put("/config", function(req,res) {
+	console.log(req.body);
+	var argv = req.body;
+	LOCAL_ENDPOINT = {IP : argv.local_ip, PORT : LOCAL_PORT, NAME : argv.local_name};
+	REMOTE_ENDPOINT =  {IP : argv.remote_ip, PORT : argv.remote_port, NAME : argv.remote_name};
+	register();
+	res.status(E_OK).send("");
+});
 
-register();
 app.listen(LOCAL_ENDPOINT.PORT , function () {
-    console.log(LOCAL_ENDPOINT.NAME + ' listening on : ' + LOCAL_ENDPOINT.PORT );
+    console.log("Vnf Gateway waiting config on "+LOCAL_PORT);
 });

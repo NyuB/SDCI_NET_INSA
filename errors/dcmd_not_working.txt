@@ -1,0 +1,5 @@
+vim-emu compute start -i image:tag -n vnfname -d DC -c 'scr.sh' 
+# -> no effect, vnf deployed correctly but without execution
+
+curl -X PUT -d '{"image":"image:tag", "datacenter":"DC", "name":vnfname", "docker_command":"scr.sh"}' 
+# -> vnf crashed, a docker is created but not deployed in mininet, no response from vim server

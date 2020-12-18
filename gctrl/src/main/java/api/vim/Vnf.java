@@ -7,6 +7,7 @@ public class Vnf {
 	private String name;
 	private String image;
 	private List<Network> network;
+	private String docker_network;
 
 	public String getDatacenter() {
 		return datacenter;
@@ -40,12 +41,21 @@ public class Vnf {
 		this.network = network;
 	}
 
+	public String getDocker_network(){
+		return this.docker_network;
+	}
+
+	public void setDocker_network(String docker_network){
+		this.docker_network = docker_network;
+	}
+
 	@Override
 	public String toString() {
 		String res= "Vnf{" +
 				"datacenter='" + datacenter + '\'' +
 				", name='" + name + '\'' +
 				", image='" + image + '\'' +
+				", docker_network='" + docker_network + '\'' +
 				'}';
 		for(Network n : network){
 			res+=n+", ";
