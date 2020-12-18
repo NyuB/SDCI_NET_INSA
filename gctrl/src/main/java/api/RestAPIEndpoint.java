@@ -10,4 +10,8 @@ public class RestAPIEndpoint {
 		}
 		this.endpoint = endpoint;
 	}
+
+	public RestAPIEndpoint(String ip,int port){
+		this("http://"+ip+":"+port+"/");
+	}
 }

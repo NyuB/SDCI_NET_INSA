@@ -11,4 +11,8 @@ public class VnfConfigAPIEndpoint extends RestAPIEndpoint {
 	public void putRestConfig(VnfConfig config){
 		rest.put(endpoint+"config",config);
 	}
+
+	public VnfConfigAPIEndpoint(String ip, int port) {
+		super(ip, port);
+	}
 }

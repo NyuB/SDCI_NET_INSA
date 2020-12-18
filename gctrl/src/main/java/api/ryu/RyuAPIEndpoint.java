@@ -7,6 +7,10 @@ public class RyuAPIEndpoint extends RestAPIEndpoint {
 		super(endpoint);
 	}
 
+	public RyuAPIEndpoint(String ip, int port) {
+		super(ip, port);
+	}
+
 	public void postRestAddFlowRule(FlowRule flowRule){
 		Object ok = rest.postForObject(endpoint+"stats/flowentry/add",flowRule,Object.class);
 	}

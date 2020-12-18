@@ -8,6 +8,10 @@ public class GatewayAPIEndpoint extends RestAPIEndpoint {
 		super(endpoint);
 	}
 
+	public GatewayAPIEndpoint(String ip, int port) {
+		super(ip, port);
+	}
+
 	public PingResponse getRestPing() {
 		return rest.getForObject(endpoint + "ping", PingResponse.class);
 	}

@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class Manual {
 
 	public static String askNextLine(Scanner in){
-		System.out.println("Enter command");
+		System.out.print("Enter command\n>> ");
 		return in.nextLine();
 	}
 	private static Map<String,String> parseOptions(String[] cmd, String token, int index){
@@ -35,12 +35,14 @@ public class Manual {
 	public static void main(String[] args) throws IOException {
 		RyuAPIEndpoint ryu = new RyuAPIEndpoint("http://localhost:8080");
 		VimEmuAPIEndpoint vim = new VimEmuAPIEndpoint("http://localhost:5001");
+		MANOAPI manoapi = new MANOAPI();
+		SDNCtrlAPI sdnCtrlAPI = new SDNCtrlAPI();
 		Scanner in = new Scanner(System.in);
 		String line;
 		while((line=askNextLine(in))!=null && !line.equals("")){
 			String[] cmd = line.split(" ");
 			if(cmd.length==0){
-				System.out.println("Enter command");
+				continue;
 			}
 			else if(cmd[0].equals("drop")) {
 				int switchId = Integer.parseInt(cmd[1]);
@@ -58,7 +60,7 @@ public class Manual {
 				ryu.postRestAddFlowRule(flowRule);
 
 			}
-			else if(cmd[0].equals("vnf")){//datacenter image vnf [dockercommands,...]
+			else if(cmd[0].equals("vnfadd")){//datacenter image vnf [dockercommands,...]
 				ComputeStart computeStart = new ComputeStart();
 				computeStart.setImage(cmd[2]);
 				if(cmd.length>4){
@@ -71,6 +73,9 @@ public class Manual {
 				}
 				Vnf vnf = vim.putRestComputeStart(computeStart,cmd[1],cmd[3]);
 				System.out.println(vnf);
+			}
+			else if(cmd[0].equals("vnfdel")) {//datacenter vnfname
+				vim.delRestComputeStop(cmd[1],cmd[2]);
 			}
 			else if(cmd[0].equals("mim")){//mim dpid=3 out_port=3 in_port=1 src=10.0.0.3 dst=10.0.0.1 mid=10.0.0.12 tsp=true del=false
 				Map<String, String> options = parseOptions(cmd);
@@ -127,6 +132,34 @@ public class Manual {
 				GatewayAPIEndpoint test = new GatewayAPIEndpoint(endpoint);
 				PingResponse pong = test.getRestPing();
 				System.out.println("Received pong value : " + pong.getPong());
+			}
+			else if(cmd[0].equals("vmid")){//out_port= in_port= mid= dst= src= dpid=
+				Map<String, String> options = parseOptions(cmd);
+				int dpid = Integer.parseInt(options.get("dpid"));
+				String ipFrom = options.get("src");
+				String ipTo = options.get("dst");
+				String ipMid = options.get("mid");
+				int outputPort = Integer.parseInt(options.get("out_port"));
+				int inputPort = Integer.parseInt(options.get("in_port"));
+				sdnCtrlAPI.vnfInTheMiddle(ryu,dpid,outputPort,inputPort,ipFrom,ipMid,ipTo);
+			}
+			else if(cmd[0].equals("balance")){//ipA= ipB= name= dc= pA= pB=
+				Map<String, String> options = parseOptions(cmd);
+				String ipA = options.get("ipA");
+				String ipB = options.get("ipB");
+				String name = options.getOrDefault("name","lb");
+				String dc = options.getOrDefault("dc","DC");
+				int pA = Integer.parseInt(options.get("pA"));
+				int pB = Integer.parseInt(options.get("pB"));
+				Vnf vnf = manoapi.addLoadBalancingVnf(vim,ipA, pA, ipB, pB, dc, name);
+				System.out.println(vnf);
+			}
+			else if(cmd[0].equals("addgate")) {
+				Map<String, String> options = parseOptions(cmd);
+				String ipRemote = options.get("ipR");
+				int portRemote = Integer.parseInt(options.get("pR"));
+				Vnf vnf = manoapi.addGatewayVnf(vim, ipRemote, portRemote, "DC", "gw");
+				System.out.println(vnf);
 			}
 			else{
 				System.out.println("Unknown command");

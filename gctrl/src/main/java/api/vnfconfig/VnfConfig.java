@@ -5,21 +5,44 @@ import java.util.Map;
 public class VnfConfig {
 	private String ip_A;
 	private String ip_B;
+	private Integer port_A = null;
+	private Integer port_B = null;
 	private String local_ip;
 	private String local_name;
 	private String remote_ip;
-	private String remote_port;
+	private Integer remote_port = null;
 	private String remote_name;
+
+	public static VnfConfig ABConfig(String ip_A, int port_A, String ip_B, int port_B){
+		VnfConfig res = new VnfConfig();
+		res.setIp_A(ip_A);
+		res.setIp_B(ip_B);
+		res.setPort_A(port_A);
+		res.setPort_B(port_B);
+		return res;
+	}
+	public static VnfConfig LocalRemoteConfig(String localIp, String remoteIp,int remotePort){
+		VnfConfig res = new VnfConfig();
+		res.setLocal_ip(localIp);
+		res.setRemote_ip(remoteIp);
+		res.setRemote_port(remotePort);
+		return res;
+	}
 
 	public VnfConfig() {
 	}
 	public VnfConfig(Map<String,String> map){
 		this.setIp_A(map.get("ip_A"));
 		this.setIp_B(map.get("ip_B"));
+		String pA = map.get("port_A");
+		String pB = map.get("port_B");
+		if(pA!=null)this.setPort_A(Integer.parseInt(pA));
+		if(pB!=null)this.setPort_B(Integer.parseInt(pB));
 		this.setLocal_ip(map.get("local_ip"));
 		this.setLocal_name(map.get("local_name"));
 		this.setRemote_ip(map.get("remote_ip"));
-		this.setRemote_port(map.get("remote_port"));
+		String pR = map.get("remote_port");
+		if(pR!=null)this.setRemote_port(Integer.parseInt(pR));
 		this.setRemote_name(map.get("remote_name"));
 	}
 
@@ -37,6 +60,22 @@ public class VnfConfig {
 
 	public void setIp_B(String ip_B) {
 		this.ip_B = ip_B;
+	}
+
+	public Integer getPort_A() {
+		return port_A;
+	}
+
+	public void setPort_A(Integer port_A) {
+		this.port_A = port_A;
+	}
+
+	public Integer getPort_B() {
+		return port_B;
+	}
+
+	public void setPort_B(Integer port_B) {
+		this.port_B = port_B;
 	}
 
 	public String getLocal_ip() {
@@ -63,11 +102,11 @@ public class VnfConfig {
 		this.remote_ip = remote_ip;
 	}
 
-	public String getRemote_port() {
+	public Integer getRemote_port() {
 		return remote_port;
 	}
 
-	public void setRemote_port(String remote_port) {
+	public void setRemote_port(Integer remote_port) {
 		this.remote_port = remote_port;
 	}
 
