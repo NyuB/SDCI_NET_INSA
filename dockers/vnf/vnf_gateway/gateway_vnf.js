@@ -133,6 +133,7 @@ app.put("/config", function(req,res) {
 	var argv = req.body;
 	LOCAL_ENDPOINT = {IP : argv.local_ip, PORT : LOCAL_PORT, NAME : argv.local_name};
 	REMOTE_ENDPOINT =  {IP : argv.remote_ip, PORT : argv.remote_port, NAME : argv.remote_name};
+	configured = true;
 	register();
 	res.status(E_OK).send("");
 });
