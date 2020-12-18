@@ -30,11 +30,19 @@ http.createServer(function (req, res) {
 		}
 	}
 	else if(req.url.endsWith("config")){
-		var config = JSON.parse(req.body);
-		ENDPOINT_A = {IP : parsed.ip_A, PORT : parsed.port_A};
-		ENDPOINT_B = {IP : parsed.ip_B, PORT : parsed.port_B};
-		configured=true;
+		let data = '';
+		var parsed;
+  		req.on('data', chunk => {
+    			data += chunk;
+  		});
+  		req.on('end', () => {
+    			parsed = JSON.parse(data);
+			ENDPOINT_A = {IP : parsed.ip_A, PORT : parsed.port_A};
+			ENDPOINT_B = {IP : parsed.ip_B, PORT : parsed.port_B};
+			configured=true;
+		});
 		res.write("Ack\n");
 		res.end();
+		
 	}
 }).listen(LOCAL_PORT);
