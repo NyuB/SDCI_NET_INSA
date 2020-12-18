@@ -2,6 +2,7 @@ node:sdci
 	vnf:proxy
 	vnf:test
 	vnf:gateway
+	vnf:lb
 	host:test
 	host:gateway
 	host:device

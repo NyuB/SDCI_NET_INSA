@@ -18,8 +18,8 @@ const si = require('systeminformation');
 // --remote_name
 
 var LOCAL_PORT = 8888;
-var LOCAL_ENDPOINT;//{IP : argv.local_ip, PORT : argv.local_port, NAME : argv.local_name};
-var REMOTE_ENDPOINT;// {IP : argv.remote_ip, PORT : argv.remote_port, NAME : argv.remote_name};
+var LOCAL_ENDPOINT;
+var REMOTE_ENDPOINT;
 var configured = false;
 
 const E_OK              = 200;
