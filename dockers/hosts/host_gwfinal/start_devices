@@ -1,0 +1,7 @@
+#!/bin/bash
+port=$2
+node /home/device.js --local_ip $1 --local_port $2 --local_name "dev1" --remote_ip=$1 --remote_port $3  --remote_name $4 --send_period $5 &
+
+node /home/device.js --local_ip $1 --local_port $((port+1)) --local_name "dev2" --remote_ip=$1 --remote_port $3  --remote_name $4 --send_period $5 &
+
+node /home/device.js --local_ip $1 --local_port $((port+2)) --local_name "dev3" --remote_ip=$1 --remote_port $3  --remote_name $4 --send_period $5 &
