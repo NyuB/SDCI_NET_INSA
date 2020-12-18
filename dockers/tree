@@ -1,4 +1,5 @@
 node:sdci
+	vnf:proxy
 	vnf:test
 	vnf:gateway
 	host:test

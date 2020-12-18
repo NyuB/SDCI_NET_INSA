@@ -92,7 +92,6 @@ class Monitor {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
         }
 
         ).start();

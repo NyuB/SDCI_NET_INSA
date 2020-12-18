@@ -29,3 +29,7 @@ dir=vnf/vnf_gateway
 image>>
 tag=vnf:lb
 dir=vnf/vnf_lb
+
+image>>
+tag=vnf:proxy
+dir=vnf/vnf_proxy

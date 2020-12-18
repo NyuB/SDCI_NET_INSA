@@ -18,6 +18,7 @@ class MANOAPI {
 
     private static String IMG_LB = "vnf:lb";
     private static String IMG_GW = "vnf:gateway";
+    private static String IMG_PROXY = "vnf:proxy";
     private static int PORT_DFLT = 8888;
 
     String deploy_gw(Map<String, String> vnfinfos) {
@@ -52,7 +53,7 @@ class MANOAPI {
         VnfConfig config = VnfConfig.ABConfig(ipA,portA,ipB,portB);
         String allocatedIp = vnf.getNetwork().get(0).getIp();
         String cheatIp = vnf.getDocker_network();
-        System.out.println("VNF created, IP allocated : "+allocatedIp);
+        System.out.println("VNF created, IP allocated : "+allocatedIp+":"+PORT_DFLT);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
         vnfConfigAPIEndpoint.putRestConfig(config);
@@ -68,12 +69,24 @@ class MANOAPI {
         Vnf vnf = vim.putRestComputeStart(computeStart,dc,name);
         String allocatedIp = vnf.getNetwork().get(0).getIp();
         String cheatIp = vnf.getDocker_network();
-        System.out.println("VNF created, IP allocated : "+allocatedIp);
+        System.out.println("VNF created, IP allocated : "+allocatedIp+":"+PORT_DFLT);
         VnfConfig config = VnfConfig.LocalRemoteConfig(allocatedIp, remoteIp, remotePort);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
         vnfConfigAPIEndpoint.putRestConfig(config);
         System.out.println("Sent configuration to vnf");
+        return vnf;
+    }
+
+    public Vnf addProxyVnf(VimEmuAPIEndpoint vim, String dc, String name){
+        ComputeStart computeStart = new ComputeStart();
+        computeStart.setImage(IMG_PROXY);
+        System.out.println("Sending vnf creation request "+computeStart.getImage());
+        Vnf vnf = vim.putRestComputeStart(computeStart, dc, name);
+        String allocatedIp = vnf.getNetwork().get(0).getIp();
+        String cheatIp = vnf.getDocker_network();
+        System.out.println("VNF created, IP allocated : "+allocatedIp);
+        System.out.println("Docker @ddr : "+cheatIp+":"+PORT_DFLT);
         return vnf;
     }
 }

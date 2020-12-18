@@ -1,5 +1,6 @@
 import api.middleware.GatewayAPIEndpoint;
 import api.middleware.PingResponse;
+import api.middleware.ProxyGatewayAPIEndpoint;
 import api.ryu.Action;
 import api.ryu.FlowRule;
 import api.ryu.Match;
@@ -154,12 +155,24 @@ public class Manual {
 				Vnf vnf = manoapi.addLoadBalancingVnf(vim,ipA, pA, ipB, pB, dc, name);
 				System.out.println(vnf);
 			}
-			else if(cmd[0].equals("addgate")) {
+			else if(cmd[0].equals("addgate")) {//ipR= pR=
 				Map<String, String> options = parseOptions(cmd);
 				String ipRemote = options.get("ipR");
 				int portRemote = Integer.parseInt(options.get("pR"));
 				Vnf vnf = manoapi.addGatewayVnf(vim, ipRemote, portRemote, "DC", "gw");
 				System.out.println(vnf);
+			}
+			else if (cmd[0].equals("proxy")){
+				Vnf vnf = manoapi.addProxyVnf(vim,"DC","proxy_gc");
+				System.out.println(vnf);
+			}
+			else if(cmd[0].equals("proxyping")){//proxyIp mininetIp mininetPort
+				String proxyIp = cmd[1];
+				String ip = cmd[2];
+				int port = Integer.parseInt(cmd[3]);
+				ProxyGatewayAPIEndpoint proxy = new ProxyGatewayAPIEndpoint(proxyIp,8888,ip,port);
+				PingResponse ping = proxy.getRestPing();
+				System.out.println("Ping : "+ping.getPong());
 			}
 			else{
 				System.out.println("Unknown command");

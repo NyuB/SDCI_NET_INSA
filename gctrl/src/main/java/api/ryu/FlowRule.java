@@ -7,8 +7,8 @@ public class FlowRule {
 	private int dpid;
 	private int priority=0;
 	private int table_id = 0;
-	private int idle_timeout = 30;
-	private int hard_timeout=30;
+	private int idle_timeout = 6000;
+	private int hard_timeout= 6000;
 	private Integer flags = null;
 	private Integer cookie=null;
 	private Integer cookie_mask = null;
