@@ -12,6 +12,7 @@ public class VnfConfig {
 	private String remote_ip;
 	private Integer remote_port = null;
 	private String remote_name;
+	private String vip;
 
 	public static VnfConfig ABConfig(String ip_A, int port_A, String ip_B, int port_B){
 		VnfConfig res = new VnfConfig();
@@ -24,6 +25,13 @@ public class VnfConfig {
 	public static VnfConfig LocalRemoteConfig(String localIp, String remoteIp,int remotePort){
 		VnfConfig res = new VnfConfig();
 		res.setLocal_ip(localIp);
+		res.setRemote_ip(remoteIp);
+		res.setRemote_port(remotePort);
+		return res;
+	}
+	public static VnfConfig VipRemoteConfig(String vip, String remoteIp, int remotePort){
+		VnfConfig res = new VnfConfig();
+		res.setVip(vip);
 		res.setRemote_ip(remoteIp);
 		res.setRemote_port(remotePort);
 		return res;
@@ -44,6 +52,7 @@ public class VnfConfig {
 		String pR = map.get("remote_port");
 		if(pR!=null)this.setRemote_port(Integer.parseInt(pR));
 		this.setRemote_name(map.get("remote_name"));
+		this.setVip(map.get("vip"));
 	}
 
 	public String getIp_A() {
@@ -117,4 +126,13 @@ public class VnfConfig {
 	public void setRemote_name(String remote_name) {
 		this.remote_name = remote_name;
 	}
+
+	public String getVip(){
+		return vip;
+	}
+
+	public void setVip(String vip){
+		this.vip = vip;
+	}
+
 }

@@ -174,6 +174,14 @@ public class Manual {
 				PingResponse ping = proxy.getRestPing();
 				System.out.println("Ping : "+ping.getPong());
 			}
+			else if(cmd[0].equals("addfilter")){//vip= ipR= pR=
+				Map<String, String> options = parseOptions(cmd);
+				String vip = options.get("vip");
+				String ipRemote = options.get("ipR");
+				int portRemote = Integer.parseInt(options.get("pR"));
+				Vnf vnf = manoapi.addFilterVnf(vim, vip, ipRemote, portRemote, "DC", "gw");
+				System.out.println(vnf);
+			}
 			else{
 				System.out.println("Unknown command");
 			}

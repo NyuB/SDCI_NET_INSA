@@ -40,6 +40,7 @@ class Monitor {
     private static double i = 0;
     public GatewayAPIEndpoint gw_sensor = new GatewayAPIEndpoint("http://127.0.0.1:8181/") ;
     public String gw_current_SYMP = "N/A";
+    
 
     void start() {
         Main.logger(this.getClass().getSimpleName(), "Start monitoring of " + Knowledge.gw);
