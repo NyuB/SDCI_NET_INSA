@@ -4,9 +4,9 @@
  *  Version : 0.1.0
  */
 
-var express = require('express')
-var app = express()
-app.use(express.json()) // for parsing application/json
+var express = require('express');
+var app = express();
+app.use(express.json()); // for parsing application/json
 
 var request = require('request');
 const si = require('systeminformation');
@@ -130,14 +130,14 @@ app.get('/health', function(req, res) {
 //VNF configuration
 app.put("/config", function(req,res) {
 	console.log(req.body);
-	var argv = req.body;
-	LOCAL_ENDPOINT = {IP : argv.local_ip, PORT : LOCAL_PORT, NAME : argv.local_name};
-	REMOTE_ENDPOINT =  {IP : argv.remote_ip, PORT : argv.remote_port, NAME : argv.remote_name};
+	var configObj = req.body;
+	LOCAL_ENDPOINT = {IP : configObj.local_ip, PORT : LOCAL_PORT, NAME : configObj.local_name};
+	REMOTE_ENDPOINT =  {IP : configObj.remote_ip, PORT : configObj.remote_port, NAME : configObj.remote_name};
 	configured = true;
 	register();
 	res.status(E_OK).send("");
 });
 
-app.listen(LOCAL_ENDPOINT.PORT , function () {
+app.listen(LOCAL_PORT , function () {
     console.log("Vnf Gateway waiting config on "+LOCAL_PORT);
 });
