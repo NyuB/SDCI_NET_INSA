@@ -6,7 +6,7 @@
 
 var express = require('express');
 var app = express();
-app.use(exress.json());
+app.use(express.json());
 var request = require('request');
 
 var argv = require('yargs').argv;
