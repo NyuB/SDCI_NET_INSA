@@ -59,6 +59,7 @@ app.post("/rate", function(req,res){
 	DATA_PERIOD = req.body.rate;
 	clearInterval(intervalID);
 	intervalID = setInterval(sendData, DATA_PERIOD);
+	console.log("New rate : "+DATA_PERIOD);
 	res.status(200).write("");
 });
 

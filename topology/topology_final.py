@@ -81,16 +81,6 @@ def create_topology(httpmode=False):
     GFB = createHost(httpmode, net, 'GFB', "host:gwfinal")
     GFC = createHost(httpmode, net, 'GFC', "host:gwfinal")
 
-    #Run Services
-    S.cmd("startup --local_ip 10.0.0.1 --local_port 8080 --local_name srv")
-    GI.cmd("startup --local_ip 10.0.0.2 --local_port 8181 --local_name gwi --remote_ip 10.0.0.2 --remote_port 8080 --remote_name srv")
-    GFA.cmd("startup --local_ip 10.0.0.3 --local_port 8282 --local_name gwfa --remote_ip 10.0.0.3 --remote_port 8181 --remote_name gwi")
-    GFA.cmd("start_devices 10.0.0.3 9001 8282 gwfa 3000")
-    GFB.cmd("startup --local_ip 10.0.0.4 --local_port 8383 --local_name gwfb --remote_ip 10.0.0.4 --remote_port 8181 --remote_name gwi")
-    GFB.cmd("start_devices 10.0.0.4 9001 8383 gwfb 5000")
-    GFC.cmd("startup --local_ip 10.0.0.5 --local_port 8484 --local_name gwfc --remote_ip 10.0.0.5 --remote_port 8181 --remote_name gwi")
-
-
     #Genration of link
     net.addLink(S, s1)
     net.addLink(GI, s2)
@@ -105,6 +95,17 @@ def create_topology(httpmode=False):
 
     #Do not remove
     net.start()
+
+    #Run gateways and devices
+    S.cmd("startup --local_ip 10.0.0.1 --local_port 8080 --local_name srv")
+    GI.cmd("startup --local_ip 10.0.0.2 --local_port 8181 --local_name gwi --remote_ip 10.0.0.2 --remote_port 8080 --remote_name srv")
+    GFA.cmd("startup --local_ip 10.0.0.3 --local_port 8282 --local_name gwfa --remote_ip 10.0.0.3 --remote_port 8181 --remote_name gwi")
+    GFA.cmd("start_devices 10.0.0.3 9001 8282 gwfa 3000")
+    GFB.cmd("startup --local_ip 10.0.0.4 --local_port 8383 --local_name gwfb --remote_ip 10.0.0.4 --remote_port 8181 --remote_name gwi")
+    GFB.cmd("start_devices 10.0.0.4 9001 8383 gwfb 5000")
+    GFC.cmd("startup --local_ip 10.0.0.5 --local_port 8484 --local_name gwfc --remote_ip 10.0.0.5 --remote_port 8181 --remote_name gwi")
+    
+    #Start the command line
     net.CLI()
     # when the user types exit in the CLI, we stop the emulator
     net.stop()

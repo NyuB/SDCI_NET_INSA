@@ -38,8 +38,10 @@ class Monitor {
     private static List<String> symptom;
     private static final int period = 2000;
     private static double i = 0;
-    public GatewayAPIEndpoint gw_sensor = new GatewayAPIEndpoint("http://127.0.0.1:8181/") ;
+    public GatewayAPIEndpoint gw_sensor;
     public String gw_current_SYMP = "N/A";
+    public String monitoredIP = "10.0.0.2";
+    public int monitoredPort = 8181;
     
 
     void start() {

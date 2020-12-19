@@ -1,6 +1,9 @@
+import api.middleware.ProxyGatewayAPIEndpoint;
+import api.ryu.RyuAPIEndpoint;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
+import api.vim.Vnf;
+import api.vim.VimEmuAPIEndpoint;
 //
 
 //* @author couedrao on 25/11/2019.
@@ -11,12 +14,15 @@ import org.apache.log4j.Logger;
 
 class Main {
     static boolean run = true;
+    static final VimEmuAPIEndpoint vim = new VimEmuAPIEndpoint("http://localhost:5001");
     static final Monitor monitor = new Monitor();
     static final Analyze analyze = new Analyze();
     static final Plan plan = new Plan();
     private static final Execute execute = new Execute();
     static final Knowledge shared_knowledge = new Knowledge();
     private static final boolean log = true;
+    private static final MANOAPI manoapi = new MANOAPI();
+   
 
     public static void main(String[] args) throws Exception {
         Logger.getRootLogger().setLevel(Level.ERROR);
@@ -24,7 +30,9 @@ class Main {
 
         shared_knowledge.start();
         Thread.sleep(3000);
-
+        Vnf proxy = manoapi.addProxyVnf(vim,"DC","proxy");
+        String dockerIP = proxy.getDocker_network();
+        monitor.gw_sensor = new ProxyGatewayAPIEndpoint(dockerIP,8888,monitor.monitoredIP,monitor.monitoredPort);
         Thread thread_m = new Thread(() -> {
             try {
                 monitor.start();
