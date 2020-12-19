@@ -6,7 +6,7 @@
 
 var express = require('express');
 var app = express();
-app.use(exress.json());
+app.use(express.json());
 var request = require('request');
 
 var argv = require('yargs').argv;
@@ -35,7 +35,7 @@ function register() {
             PoC : 'http://' + LOCAL_ENDPOINT.IP + ':' + LOCAL_ENDPOINT.PORT, 
         },
         function(error, response, respBody) {
-            console.log(respBody);
+            console.log("["+LOCAL_ENDPOINT.NAME"][reg]"+respBody);
         }
     );
 }
@@ -50,17 +50,23 @@ function sendData() {
             Time : Date.now(),
         },
         function(error, response, respBody) {
-            console.log(respBody);
+            console.log("["+LOCAL_ENDPOINT.NAME"][data]"+respBody);
         }
     );
 }
 
 app.post("/rate", function(req,res){
-	DATA_PERIOD = req.body.rate;
-	clearInterval(intervalID);
-	intervalID = setInterval(sendData, DATA_PERIOD);
-	console.log("New rate : "+DATA_PERIOD);
-	res.status(200).write("");
+	if(req.body.rate!=undefined){
+		DATA_PERIOD = req.body.rate;
+		clearInterval(intervalID);
+		intervalID = setInterval(sendData, DATA_PERIOD);
+		console.log("New rate : "+DATA_PERIOD);
+		res.sendStatus(200);
+	}
+	else{
+		res.sendStatus(400);
+	}
+
 });
 
 register();
