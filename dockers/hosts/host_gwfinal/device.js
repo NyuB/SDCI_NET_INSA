@@ -35,7 +35,7 @@ function register() {
             PoC : 'http://' + LOCAL_ENDPOINT.IP + ':' + LOCAL_ENDPOINT.PORT, 
         },
         function(error, response, respBody) {
-            console.log("["+LOCAL_ENDPOINT.NAME"][reg]"+respBody);
+            console.log("["+LOCAL_ENDPOINT.NAME+"][reg]"+respBody);
         }
     );
 }
@@ -50,7 +50,7 @@ function sendData() {
             Time : Date.now(),
         },
         function(error, response, respBody) {
-            console.log("["+LOCAL_ENDPOINT.NAME"][data]"+respBody);
+            console.log("["+LOCAL_ENDPOINT.NAME+"][data]"+respBody);
         }
     );
 }
