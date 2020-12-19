@@ -72,7 +72,7 @@ def create_topology(httpmode=False):
     s3 = net.addSwitch('s3')
     s4 = net.addSwitch('s4')
 
-    S = createHost(httpmode, net, 'S')
+    S = net.addDocker("S", dimage="host:server")
     GI = createHost(httpmode, net, 'GI')
     GFA = createHost(httpmode, net, 'GFA')
     GFB = createHost(httpmode, net, 'GFB')
