@@ -91,7 +91,7 @@ app.post('/devices/register', function(req, res) {
         'http://' + REMOTE_ENDPOINT.IP + ':' +REMOTE_ENDPOINT.PORT + '/device/' + dev + '/data',
         req.body,
         function(error, response, respBody) {
-            console.log(respBody);
+            console.log("Resp final : "+respBody);
             res.sendStatus(E_OK); 
         }
     )

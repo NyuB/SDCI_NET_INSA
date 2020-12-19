@@ -35,7 +35,7 @@ function register() {
             PoC : 'http://' + LOCAL_ENDPOINT.IP + ':' + LOCAL_ENDPOINT.PORT, 
         },
         function(error, response, respBody) {
-            console.log("["+LOCAL_ENDPOINT.NAME"]"+respBody);
+            console.log("["+LOCAL_ENDPOINT.NAME"][reg]"+respBody);
         }
     );
 }
@@ -50,7 +50,7 @@ function sendData() {
             Time : Date.now(),
         },
         function(error, response, respBody) {
-            console.log(respBody);
+            console.log("["+LOCAL_ENDPOINT.NAME"][data]"+respBody);
         }
     );
 }
@@ -60,7 +60,7 @@ app.post("/rate", function(req,res){
 	clearInterval(intervalID);
 	intervalID = setInterval(sendData, DATA_PERIOD);
 	console.log("New rate : "+DATA_PERIOD);
-	res.status(200).write("");
+	res.sendStatus(200);
 });
 
 register();
