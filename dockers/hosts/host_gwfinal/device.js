@@ -56,11 +56,17 @@ function sendData() {
 }
 
 app.post("/rate", function(req,res){
-	DATA_PERIOD = req.body.rate;
-	clearInterval(intervalID);
-	intervalID = setInterval(sendData, DATA_PERIOD);
-	console.log("New rate : "+DATA_PERIOD);
-	res.sendStatus(200);
+	if(req.body.rate!=undefined){
+		DATA_PERIOD = req.body.rate;
+		clearInterval(intervalID);
+		intervalID = setInterval(sendData, DATA_PERIOD);
+		console.log("New rate : "+DATA_PERIOD);
+		res.sendStatus(200);
+	}
+	else{
+		res.sendStatus(400);
+	}
+
 });
 
 register();
