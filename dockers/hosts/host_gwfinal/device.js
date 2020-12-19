@@ -4,8 +4,9 @@
  *  Version : 0.1.0
  */
 
-var express = require('express')
-var app = express()
+var express = require('express');
+var app = express();
+app.use(exress.json());
 var request = require('request');
 
 var argv = require('yargs').argv;
@@ -21,7 +22,7 @@ var LOCAL_ENDPOINT = {IP : argv.local_ip, PORT : argv.local_port, NAME : argv.lo
 var REMOTE_ENDPOINT = {IP : argv.remote_ip, PORT : argv.remote_port, NAME : argv.remote_name};
 
 var DATA_PERIOD = argv.send_period;
-
+var intervalID;
 function doPOST(uri, body, onResponse) {
     request({method: 'POST', uri: uri, json : body}, onResponse); 
 }
@@ -54,6 +55,15 @@ function sendData() {
     );
 }
 
+app.post("/rate", function(req,res){
+	DATA_PERIOD = req.body.rate;
+	clearInterval(intervalID);
+	intervalID = setInterval(sendData, DATA_PERIOD);
+	res.status(200).write("");
+});
+
 register();
 
-setInterval(sendData, DATA_PERIOD);
+intervalID = setInterval(sendData, DATA_PERIOD);
+
+app.listen(LOCAL_ENDPOINT.PORT);

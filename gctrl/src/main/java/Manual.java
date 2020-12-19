@@ -134,14 +134,15 @@ public class Manual {
 				PingResponse pong = test.getRestPing();
 				System.out.println("Received pong value : " + pong.getPong());
 			}
-			else if(cmd[0].equals("vmid")){//out_port= in_port= mid= dst= src= dpid=
+			else if(cmd[0].equals("vmid")){//out= in= ipMid= pMid= dst= src= dpid=
 				Map<String, String> options = parseOptions(cmd);
 				int dpid = Integer.parseInt(options.get("dpid"));
 				String ipFrom = options.get("src");
 				String ipTo = options.get("dst");
-				String ipMid = options.get("mid");
-				int outputPort = Integer.parseInt(options.get("out_port"));
-				int inputPort = Integer.parseInt(options.get("in_port"));
+				String ipMid = options.get("ipMid");
+				String portMid = options.get("pMid");
+				int outputPort = Integer.parseInt(options.get("out"));
+				int inputPort = Integer.parseInt(options.get("in"));
 				sdnCtrlAPI.vnfInTheMiddle(ryu,dpid,outputPort,inputPort,ipFrom,ipMid,ipTo);
 			}
 			else if(cmd[0].equals("balance")){//ipA= ipB= name= dc= pA= pB=
@@ -179,7 +180,7 @@ public class Manual {
 				String vip = options.get("vip");
 				String ipRemote = options.get("ipR");
 				int portRemote = Integer.parseInt(options.get("pR"));
-				Vnf vnf = manoapi.addFilterVnf(vim, vip, ipRemote, portRemote, "DC", "gw");
+				Vnf vnf = manoapi.addFilterVnf(vim, vip, ipRemote, portRemote, "DC", "flt");
 				System.out.println(vnf);
 			}
 			else{
