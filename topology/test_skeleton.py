@@ -73,7 +73,7 @@ def create_topology(httpmode=False):
     s4 = net.addSwitch('s4')
 
     S = net.addDocker("S", dimage="host:server")
-    GI = createHost(httpmode, net, 'GI')
+    GI = net.addDocker("GI", dimage="host:gateway")
     GFA = createHost(httpmode, net, 'GFA')
     GFB = createHost(httpmode, net, 'GFB')
     GFC = createHost(httpmode, net, 'GFC')
@@ -87,8 +87,7 @@ def create_topology(httpmode=False):
     net.addLink(s1, s2)
     net.addLink(s2, s3)
     net.addLink(s2, s4)
-    #net.addLink(s3, s4) avoid loop for now, keep a tree structure
-    net.addLink(DC, s4)
+    net.addLink(DC, s2)
 
     #Do not remove
     net.start()
