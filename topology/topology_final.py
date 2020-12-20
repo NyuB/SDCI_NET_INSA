@@ -100,7 +100,7 @@ def create_topology(httpmode=False):
     #Run gateways and devices
     S.cmd("startup --local_ip 10.0.0.1 --local_port 8080 --local_name srv")
     time.sleep(2)
-    GI.cmd("startup --local_ip 10.0.0.2 --local_port 8181 --local_name gwi --remote_ip 10.0.0.2 --remote_port 8080 --remote_name srv")
+    GI.cmd("startup --local_ip 10.0.0.2 --local_port 8181 --local_name gwi --remote_ip 10.0.0.1 --remote_port 8080 --remote_name srv")
     time.sleep(2)
     GFA.cmd("startup --local_ip 10.0.0.3 --local_port 8282 --local_name gwfa --remote_ip 10.0.0.2 --remote_port 8181 --remote_name gwi")
     time.sleep(2)

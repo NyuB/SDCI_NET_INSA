@@ -1,7 +1,11 @@
 #!/bin/bash
+ip=$1
 port=$2
-node /home/device.js --local_ip $1 --local_port $2 --local_name "dev1" --remote_ip=$1 --remote_port $3  --remote_name $4 --send_period $5 &
+gwport=$3
+gw=$4
+rate=$5
+node /home/device.js --local_ip $ip --local_port $port --local_name "${gw}dev1" --remote_ip=$ip --remote_port $gwport  --remote_name $gw --send_period $rate &
 
-node /home/device.js --local_ip $1 --local_port $((port+1)) --local_name "dev2" --remote_ip=$1 --remote_port $3  --remote_name $4 --send_period $5 &
+node /home/device.js --local_ip $ip --local_port $((port+1)) --local_name "${gw}dev2" --remote_ip=$ip --remote_port $gwport  --remote_name $gw --send_period $rate &
 
-node /home/device.js --local_ip $1 --local_port $((port+2)) --local_name "dev3" --remote_ip=$1 --remote_port $3  --remote_name $4 --send_period $5 &
+node /home/device.js --local_ip $ip --local_port $((port+2)) --local_name "${gw}dev3" --remote_ip=$ip --remote_port $gwport  --remote_name $gw --send_period $rate &
