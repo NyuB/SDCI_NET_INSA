@@ -104,10 +104,10 @@ def create_topology(httpmode=False):
     time.sleep(2)
     GFA.cmd("startup --local_ip 10.0.0.3 --local_port 8282 --local_name gwfa --remote_ip 10.0.0.2 --remote_port 8181 --remote_name gwi")
     time.sleep(2)
-    GFA.cmd("start_devices 10.0.0.3 9001 8282 gwfa 5000")
+    GFA.cmd("start_devices 10.0.0.3 9001 8282 gwfa 500")
     GFB.cmd("startup --local_ip 10.0.0.4 --local_port 8383 --local_name gwfb --remote_ip 10.0.0.2 --remote_port 8181 --remote_name gwi")
     time.sleep(2)
-    GFB.cmd("start_devices 10.0.0.4 9001 8383 gwfb 5000")
+    GFB.cmd("start_devices 10.0.0.4 9001 8383 gwfb 500")
     GFC.cmd("startup --local_ip 10.0.0.5 --local_port 8484 --local_name gwfc --remote_ip 10.0.0.2 --remote_port 8181 --remote_name gwi")
     
     #Start the command line
