@@ -15,12 +15,18 @@ tag=host:gateway
 dir=hosts/host_gateway
 
 image>>
+tag=host:gwfinal
+dir=hosts/host_gwfinal
+
+image>>
 tag=host:server
 dir=hosts/host_server
 
 image>>
 tag=vnf:test
 dir=vnf/vnf_test
+provide=js/test.js|test_vnf.js
+provide=js/gateway.js|gw_vnf.js
 
 image>>
 tag=vnf:gateway
@@ -33,3 +39,7 @@ dir=vnf/vnf_lb
 image>>
 tag=vnf:proxy
 dir=vnf/vnf_proxy
+
+image>>
+tag=vnf:filter
+dir=vnf/vnf_filter

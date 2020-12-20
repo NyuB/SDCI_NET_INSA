@@ -1,6 +1,7 @@
 import sys
 import os
 import docker
+from shutils import copyfile
 ABSTRACT_ROOT_TAG = '/'
 dck = docker.from_env()
 class TagNode:
@@ -21,9 +22,13 @@ class Tree:
 	def __init__(self,root, direct):
 		self.root = root
 		self.direct = direct
+class Provision:
+	def __init__(self, filefrom, fileto):
+		self.filefrom = filefrom
+		self.fileto = fileto
 class ImageInfo:
 	def __init__(self):
-		pass
+		self.provisions = []
 	
 def read_dockermakefile(makefile):
 	current = None
@@ -41,6 +46,9 @@ def read_dockermakefile(makefile):
 					current.tag = val
 				elif key == "dir":
 					current.dir = val
+				elif key == "provide":
+					src,dst = val.split('|')
+					current.provisions.append(Provision(src,dst))
 	if current is not None:
 		res[current.tag]=current
 	return res
@@ -110,6 +118,11 @@ def bfs(root):
 
 def remove_image(tag, dck=dck):
 	dck.images.remove(image=tag)
+
+def provision_image(tag, infos):
+	print("Provisioning image :",tag)
+	for p in infos.provisions:
+		copyfile(p.filefrom, infos.get(tag).dir+"/"+p.fileto)
 
 def build_image(tag,infos, dck = dck):
 	print("Building image :",tag)

@@ -3,7 +3,8 @@ node:sdci
 	vnf:test
 	vnf:gateway
 	vnf:lb
+	vnf:filter
 	host:test
 	host:gateway
-	host:device
 	host:server
+	host:gwfinal
