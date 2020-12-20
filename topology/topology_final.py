@@ -25,6 +25,7 @@
 # partner consortium (www.sonata-nfv.eu).
 import logging
 import sys
+import time
 from mininet.log import setLogLevel
 from emuvim.dcemulator.net import DCNetwork
 from emuvim.api.rest.rest_api_endpoint import RestApiEndpoint
@@ -98,10 +99,14 @@ def create_topology(httpmode=False):
 
     #Run gateways and devices
     S.cmd("startup --local_ip 10.0.0.1 --local_port 8080 --local_name srv")
+    time.sleep(2)
     GI.cmd("startup --local_ip 10.0.0.2 --local_port 8181 --local_name gwi --remote_ip 10.0.0.2 --remote_port 8080 --remote_name srv")
+    time.sleep(2)
     GFA.cmd("startup --local_ip 10.0.0.3 --local_port 8282 --local_name gwfa --remote_ip 10.0.0.2 --remote_port 8181 --remote_name gwi")
+    time.sleep(2)
     GFA.cmd("start_devices 10.0.0.3 9001 8282 gwfa 5000")
     GFB.cmd("startup --local_ip 10.0.0.4 --local_port 8383 --local_name gwfb --remote_ip 10.0.0.2 --remote_port 8181 --remote_name gwi")
+    time.sleep(2)
     GFB.cmd("start_devices 10.0.0.4 9001 8383 gwfb 5000")
     GFC.cmd("startup --local_ip 10.0.0.5 --local_port 8484 --local_name gwfc --remote_ip 10.0.0.2 --remote_port 8181 --remote_name gwi")
     
