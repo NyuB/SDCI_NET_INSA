@@ -122,7 +122,7 @@ app.get('/health', function(req, res) {
     console.log(req.body);
     si.currentLoad((d) => {
         console.log(d);
-        res.status(E_OK).send(JSON.stringify(d));
+        res.status(E_OK).send({currentload:d.currentload});
     })
 });
 
