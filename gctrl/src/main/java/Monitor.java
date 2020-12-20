@@ -1,3 +1,4 @@
+import api.middleware.HealthResponse;
 import com.github.signaflo.math.operations.DoubleFunctions;
 import com.github.signaflo.timeseries.TimeSeries;
 import com.github.signaflo.timeseries.forecast.Forecast;
@@ -103,10 +104,11 @@ class Monitor {
     //metrique possible : ping / RAM/ CPU/
     private int get_data() {
         //Call Sensors
-        long start = new java.util.Date().getTime() ;
-        PingResponse ping = gw_sensor.getRestPing() ;
-        int time = (int) (ping.getPong() - start ) ;
-        return time;
+        //long start = new java.util.Date().getTime() ;
+        //PingResponse ping = gw_sensor.getRestPing() ;
+        //int time = (int) (ping.getPong() - start ) ;
+        HealthResponse cpu = gw_sensor.getRestHealth();
+        return (int)cpu.getCurrentload();
     }
 
     private double get_fake_data() {

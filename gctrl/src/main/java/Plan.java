@@ -54,10 +54,12 @@ class Plan {
 
         if ("YourPlansDoNotWork".contentEquals(rfc)) {
             // Thread.sleep(2000);
-            Main.run = false;
+            //Main.run = false;
             Main.logger(this.getClass().getSimpleName(), "All the Plans were executed without success. \n \t\t The loop will stop!");
+            Main.logger(this.getClass().getSimpleName(), "All the Plans were executed and without effect :( . \n \t\t Wait and hope it is only a matter of time!");
+            return plans.get(0);//Just wait instead of exiting immediatly
             // Terminate JVM
-            System.exit(0);
+            //System.exit(0);
         } else if (rfc.contentEquals(rfcs.get(0))) {
             Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(0));
             i = 0;
@@ -71,6 +73,10 @@ class Plan {
                 Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(2));
                 i++;
                 return plans.get(2);
+            } else if (i == 2){
+                Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(3));
+                i++;
+                return plans.get(3);
             }
         }
         return null;

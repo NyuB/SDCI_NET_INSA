@@ -57,7 +57,7 @@ class MANOAPI {
         System.out.println("VNF created, IP allocated : "+allocatedIp+":"+PORT_DFLT);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
-        vnfConfigAPIEndpoint.putRestConfig(config);
+        vnfConfigAPIEndpoint.putRestConfig(config,3,500);
         System.out.println("Sent configuration to vnf");
         return vnf;
 
@@ -68,14 +68,13 @@ class MANOAPI {
         computeStart.setImage(IMG_GW);
         System.out.println("Sending vnf creation request "+computeStart.getImage());
         Vnf vnf = vim.putRestComputeStart(computeStart,dc,name);
-        String allocatedIp = vnf.getNetwork().get(0).getIp();
-        String ipWithoutMask = allocatedIp.split("/")[0];
+        String ipWithoutMask = vnf.mnIP();
         String cheatIp = vnf.getDocker_network();
-        System.out.println("VNF created, IP allocated : " + allocatedIp + ":" + PORT_DFLT);
+        System.out.println("VNF created, IP allocated : " + ipWithoutMask + ":" + PORT_DFLT);
         VnfConfig config = VnfConfig.LocalRemoteConfig(ipWithoutMask, remoteIp, remotePort);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
-        vnfConfigAPIEndpoint.putRestConfig(config);
+        vnfConfigAPIEndpoint.putRestConfig(config,3,500);
         System.out.println("Sent configuration to vnf");
         return vnf;
     }
@@ -91,7 +90,7 @@ class MANOAPI {
         VnfConfig config = VnfConfig.VipRemoteConfig(vip, remoteIp, remotePort);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
-        vnfConfigAPIEndpoint.putRestConfig(config);
+        vnfConfigAPIEndpoint.putRestConfig(config,3,500);
         System.out.println("Sent configuration to vnf");
         return vnf;
     }
