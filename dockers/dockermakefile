@@ -9,37 +9,44 @@ dir=hosts/host_test
 image>>
 tag=host:device
 dir=hosts/host_device
+provide=js/device.js|device.js
 
 image>>
 tag=host:gateway
 dir=hosts/host_gateway
+provide=js/gateway.js|gateway.js
 
 image>>
 tag=host:gwfinal
 dir=hosts/host_gwfinal
+provide=js/gateway.js|gateway.js
+provide=js/device.js|device.js
 
 image>>
 tag=host:server
 dir=hosts/host_server
+provide=js/server.js|server.js
 
 image>>
 tag=vnf:test
 dir=vnf/vnf_test
-provide=js/test.js|test_vnf.js
-provide=js/gateway.js|gw_vnf.js
 
 image>>
 tag=vnf:gateway
 dir=vnf/vnf_gateway
+provide=js/gateway_vnf.js|gateway_vnf.js
 
 image>>
 tag=vnf:lb
 dir=vnf/vnf_lb
+provide=js/lb_vnf.js|lb_vnf.js
 
 image>>
 tag=vnf:proxy
 dir=vnf/vnf_proxy
+provide=js/proxy_vnf.js|proxy_vnf.js
 
 image>>
 tag=vnf:filter
 dir=vnf/vnf_filter
+provide=js/filter_vnf.js|filter_vnf.js
