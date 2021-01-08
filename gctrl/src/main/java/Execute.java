@@ -25,6 +25,7 @@ class Execute {
 
 
 	//TODO => move hardcoded switch params to Knowledge
+	/*
 	private static int switchA = 3;
 	private static int switchB = 4;
 	private static int portInA = 1;
@@ -33,6 +34,7 @@ class Execute {
 	private static int portDCB = 3;
 	private static String ipGFA = "10.0.0.3";
 	private static String ipS = "10.0.0.1";
+	*/
 
 	void start() throws InterruptedException {
 		Main.logger(this.getClass().getSimpleName(), "Start Execution");
@@ -86,7 +88,7 @@ class Execute {
 						Vnf vnf = manoapi.addGatewayVnf(vim, "10.0.0.1", 8080, "DC", "gwUC7");
 						String ipWithoutMask = vnf.mnIP();
 						Main.logger(this.getClass().getSimpleName(), "Redirecting GFA traffic to new GW");
-						sdnctlrapi.vnfInTheMiddle(ryu, switchA, portDCA, portInA, ipGFA, ipWithoutMask, ipS);
+						sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipS);
 					default:
 				}
 				Thread.sleep(2000);

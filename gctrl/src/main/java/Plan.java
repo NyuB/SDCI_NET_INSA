@@ -22,6 +22,7 @@ import java.util.List;
 class Plan {
     private static int i;
     public String gw_PLAN = "";
+    private int nbSymptom ;
 
     void start() {
         Main.logger(this.getClass().getSimpleName(), "Start Planning");
@@ -46,7 +47,6 @@ class Plan {
         return Main.analyze.gw_current_RFC;
     }
 
-
     //Rule-based Plan Generator
     private String plan_generator(String rfc) {
         List<String> rfcs = Main.shared_knowledge.get_rfc();
@@ -61,22 +61,31 @@ class Plan {
             // Terminate JVM
             //System.exit(0);
         } else if (rfc.contentEquals(rfcs.get(0))) {
+            nbSymptom = 0 ;
             Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(0));
             i = 0;
             return plans.get(0);
         } else if (rfc.contentEquals(rfcs.get(1))) {
-            if (i == 0) {
+            nbSymptom++;
+            boolean symptom_ko = nbSymptom > 2 ;
+            Main.logger(this.getClass().getSimpleName(), "Nb Symptoms : " + nbSymptom);
+            if (i == 0 && symptom_ko) {
                 Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(1));
                 i++;
+                nbSymptom = 0 ;
                 return plans.get(1);
-            } else if (i == 1) {
+            } else if (i == 1 && symptom_ko) {
                 Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(2));
                 i++;
+                nbSymptom = 0 ;
                 return plans.get(2);
-            } else if (i == 2){
+            } else if (i == 2 && symptom_ko){
                 Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(3));
                 i++;
+                nbSymptom = 0 ;
                 return plans.get(3);
+            } else {
+                return plans.get(0) ;
             }
         }
         return null;
