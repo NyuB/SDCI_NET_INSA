@@ -31,7 +31,7 @@ class Knowledge {
 	static final int moving_wind = 10;
 	static final int horizon = 3;
 	static final String gw = "GW_I";
-	static final double gw_lat_threshold = 45;
+	static final double gw_lat_threshold = 25;
 
 	/*TODO : edit symptom, rfc, workflow_lists, plan*/
 	private static final List<String> symptom = Arrays.asList("N/A", "NOK", "OK");

@@ -1,7 +1,7 @@
 import sys
 import os
 import docker
-from shutils import copyfile
+from shutil import copyfile
 ABSTRACT_ROOT_TAG = '/'
 dck = docker.from_env()
 class TagNode:

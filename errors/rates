@@ -1,0 +1,5 @@
+Bien spécifier le content-type en utilisant curl pour le rate des devices:
+	curl -i -v -X POST -H "Content-type:application/json" -d '{"rate":125}' http://172.17.0.5:9003/rate
+
+GFA&GFB à 500 : ~30% cpu de GI
+GFA à ~ 250 : overload

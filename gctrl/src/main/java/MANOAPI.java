@@ -90,7 +90,7 @@ class MANOAPI {
         VnfConfig config = VnfConfig.VipRemoteConfig(vip, remoteIp, remotePort);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
-        vnfConfigAPIEndpoint.putRestConfig(config,3,500);
+        vnfConfigAPIEndpoint.putRestConfig(config,5,750);
         System.out.println("Sent configuration to vnf");
         return vnf;
     }
