@@ -17,6 +17,8 @@ import java.util.Random;
 class MANOAPI {
 
     private static int PORT_DFLT = 8888;
+    private static int RETRIES_DFLT = 5;
+    private static int RETRY_PERIOD_DFLT = 750;
 
     String deploy_gw(Map<String, String> vnfinfos) {
         String ip = "192.168.0." + (new Random().nextInt(253) + 1);
@@ -53,7 +55,7 @@ class MANOAPI {
         System.out.println("VNF created, IP allocated : "+allocatedIp+":"+PORT_DFLT);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
-        vnfConfigAPIEndpoint.putRestConfig(config,3,500);
+        vnfConfigAPIEndpoint.putRestConfig(config,RETRIES_DFLT, RETRY_PERIOD_DFLT);
         System.out.println("Sent configuration to vnf");
         return vnf;
     }
@@ -69,7 +71,7 @@ class MANOAPI {
         VnfConfig config = VnfConfig.LocalRemoteConfig(ipWithoutMask, remoteIp, remotePort);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
-        vnfConfigAPIEndpoint.putRestConfig(config,3,500);
+        vnfConfigAPIEndpoint.putRestConfig(config,RETRIES_DFLT, RETRY_PERIOD_DFLT);
         System.out.println("Sent configuration to vnf");
         return vnf;
     }
@@ -85,7 +87,7 @@ class MANOAPI {
         VnfConfig config = VnfConfig.VipRemoteConfig(vip, remoteIp, remotePort);
         VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
         System.out.println("Sending configuration request to vnf");
-        vnfConfigAPIEndpoint.putRestConfig(config,5,750);
+        vnfConfigAPIEndpoint.putRestConfig(config,RETRIES_DFLT, RETRY_PERIOD_DFLT);
         System.out.println("Sent configuration to vnf");
         return vnf;
     }
