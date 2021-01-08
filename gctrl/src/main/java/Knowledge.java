@@ -47,6 +47,16 @@ class Knowledge {
 	private List<String> newgwsip;
 	private final String importantsrcip = "192.168.0.1";
 
+	//Test
+	public static final int switchA = 3;
+	public static final int switchB = 4;
+	public static final int portInA = 1;
+	public static final int portInB = 1;
+	public static final int portDCA = 3;
+	public static final int portDCB = 3;
+	public static final String ipGFA = "10.0.0.3";
+	public static final String ipS = "10.0.0.1";
+
 	void start() throws Exception {
 		// delete the H2 database named 'test' in the user home directory
 		DeleteDbFiles.execute("~", "test", true);
