@@ -75,6 +75,7 @@ class Plan {
 				nbSymptom = 0;
 				return plans.get(1);
 			} else {
+				Main.logger(this.getClass().getSimpleName(), "No more plans available...wait and pray");
 				Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(0));
 				return plans.get(0);
 			}

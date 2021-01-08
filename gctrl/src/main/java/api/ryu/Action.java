@@ -3,46 +3,43 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Action  {
-	private String type = null;
-	private Integer port = null;
-	private String field = null;
-	private String value = null;
+	protected String type = null;
+	protected String field = null;
 
 	public static String OUTPUT = "OUTPUT";
 	public static String SET_FIELD = "SET_FIELD";
+	public static String SET_TP_DST = "SET_TP_DST";
 
 	public static List<Action> DROP() {
 		return new LinkedList<>();
 	} 
 
 	public static Action Output(int outputPort){
-		Action res = new Action();
-		res.type = OUTPUT;
-		res.port = outputPort;
+		SetOutputPortAction res = new SetOutputPortAction();
+		res.setPort(outputPort);
 		return res;
 	}
 
 	public static Action SwitchIPDest(String newIp){
-		Action res = new Action();
+		SetStringFieldAction res = new SetStringFieldAction();
 		res.type = SET_FIELD;
 		res.field = "ipv4_dst";
-		res.value = newIp;
+		res.setValue(newIp);
 		return res;
 	}
 
 	public static Action SwitchIPSrc(String newIp){
-		Action res = new Action();
+		SetStringFieldAction res = new SetStringFieldAction();
 		res.type = SET_FIELD;
 		res.field = "ipv4_src";
-		res.value = newIp;
+		res.setValue(newIp);
 		return res;
 	}
 
-	public static Action SetField(String field, String value){
-		Action res = new Action();
-		res.type = SET_FIELD;
-		res.field = field;
-		res.value = value;
+	public static Action SwitchPortDest(int newPort){
+		SetIntFieldAction res = new SetIntFieldAction();
+		res.setField("tcp_dst");
+		res.setValue(newPort);
 		return res;
 	}
 
@@ -58,11 +55,11 @@ public class Action  {
 		this.type = type;
 	}
 
-	public Integer getPort() {
-		return port;
+	public String getField() {
+		return field;
 	}
 
-	public void setPort(Integer port) {
-		this.port = port;
+	public void setField(String field) {
+		this.field = field;
 	}
 }

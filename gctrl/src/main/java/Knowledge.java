@@ -62,15 +62,13 @@ class Knowledge {
 	public static final int portDCB = 3;
 
 	public static final String ipS = "10.0.0.1";
-	public static final int portS = 8080;
+	public static final int portS = 8888;
 	public static final String ipGI = "10.0.0.2";
-	public static final int portGI = 8181;
+	public static final int portGI = 8888;
 	public static final String ipGFA = "10.0.0.3";
-	public static final int portGFA = 8282;
+	public static final int portGFA = 8888;
 	public static final String ipGFB = "10.0.0.4";
-	public static final int portGFB = 8383;
-
-
+	public static final int portGFB = 8888;
 
 	void start() throws Exception {
 		// delete the H2 database named 'test' in the user home directory

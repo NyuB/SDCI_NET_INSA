@@ -78,7 +78,7 @@ public class Manual {
 			else if(cmd[0].equals("vnfdel")) {//datacenter vnfname
 				vim.delRestComputeStop(cmd[1],cmd[2]);
 			}
-			else if(cmd[0].equals("mim")){//mim dpid=3 out_port=3 in_port=1 src=10.0.0.3 dst=10.0.0.1 mid=10.0.0.12 tsp=true del=false
+			else if(cmd[0].equals("mim")){//mim dpid=3 out_port=3 in_port=1 src=10.0.0.3 dst=10.0.0.1 mid=10.0.0.12 midP=8888 tsp=true del=false
 				Map<String, String> options = parseOptions(cmd);
 				int dpid = Integer.parseInt(options.get("dpid"));
 				String ipFrom = options.get("src");
@@ -140,10 +140,10 @@ public class Manual {
 				String ipFrom = options.get("src");
 				String ipTo = options.get("dst");
 				String ipMid = options.get("ipMid");
-				String portMid = options.get("pMid");
+				int portMid = Integer.parseInt(options.get("pMid"));
 				int outputPort = Integer.parseInt(options.get("out"));
 				int inputPort = Integer.parseInt(options.get("in"));
-				sdnCtrlAPI.vnfInTheMiddle(ryu,dpid,outputPort,inputPort,ipFrom,ipMid,ipTo);
+				sdnCtrlAPI.vnfInTheMiddle(ryu,dpid,outputPort,inputPort,ipFrom,ipMid,ipTo,portMid);
 			}
 			else if(cmd[0].equals("balance")){//ipA= ipB= name= dc= pA= pB=
 				Map<String, String> options = parseOptions(cmd);

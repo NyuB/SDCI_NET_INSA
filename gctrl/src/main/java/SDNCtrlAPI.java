@@ -36,28 +36,30 @@ class SDNCtrlAPI {
         return status;
     }
 
-    public void vnfInTheMiddle(RyuAPIEndpoint ryu, int switchId, int outPort, int inPort, String ipHost, String ipVnf, String ipServer){
+    public void vnfInTheMiddle(RyuAPIEndpoint ryu, int switchId, int outPort, int inPort, String ipHost, String ipVnf, String ipServer, int portVnf){
         //First rule
         Match firstMatch = Match.Ipv4SrcDest(ipHost,ipServer);
         Action a = Action.SwitchIPDest(ipVnf);
-        Action b = Action.Output(outPort);
+        //Action b = Action.SwitchPortDest(portVnf);
+        Action c = Action.Output(outPort);
         FlowRule first = new FlowRule();
         first.setDpid(switchId);
         first.setPriority(666);
         first.queueAction(a);
-        first.queueAction(b);
+        //first.queueAction(b);
+        first.queueAction(c);
         first.setMatch(firstMatch);
         ryu.postRestAddFlowRule(first);
 
         //Second rule to complete transparency
         Match secondMatch = Match.Ipv4SrcDest(ipVnf,ipHost);
-        Action c = Action.SwitchIPSrc(ipServer);
-        Action d = Action.Output(inPort);
+        Action d = Action.SwitchIPSrc(ipServer);
+        Action e = Action.Output(inPort);
         FlowRule second = new FlowRule();
         second.setDpid(switchId);
         second.setPriority(666);
-        second.queueAction(c);
         second.queueAction(d);
+        second.queueAction(e);
         second.setMatch(secondMatch);
         ryu.postRestAddFlowRule(second);
 
