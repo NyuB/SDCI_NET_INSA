@@ -9,7 +9,8 @@
 	"flags":0,
 	"match":
 		{
-			"ipv4_dst":"10.0.0.1"
+			"ipv4_dst":"10.0.0.1",
+			"eth_type":"0x0800"
 		},
 	"actions":
 		[

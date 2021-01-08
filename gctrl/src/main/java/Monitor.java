@@ -41,8 +41,10 @@ class Monitor {
     private static double i = 0;
     public GatewayAPIEndpoint gw_sensor;
     public String gw_current_SYMP = "N/A";
-    public final String monitoredIP = "10.0.0.2";
-    public final int monitoredPort = 8888;
+
+    public String monitoredIP = "10.0.0.2";
+    public int monitoredPort = 8888;
+
     
 
     void start() {

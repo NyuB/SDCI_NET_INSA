@@ -40,13 +40,13 @@ class SDNCtrlAPI {
         //First rule
         Match firstMatch = Match.Ipv4SrcDest(ipHost,ipServer);
         Action a = Action.SwitchIPDest(ipVnf);
-        Action b = Action.SwitchPortDest(portVnf);
+        //Action b = Action.SwitchPortDest(portVnf);
         Action c = Action.Output(outPort);
         FlowRule first = new FlowRule();
         first.setDpid(switchId);
         first.setPriority(666);
         first.queueAction(a);
-        first.queueAction(b);
+        //first.queueAction(b);
         first.queueAction(c);
         first.setMatch(firstMatch);
         ryu.postRestAddFlowRule(first);

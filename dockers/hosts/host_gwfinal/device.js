@@ -37,7 +37,7 @@ function register() {
         function(error, response, respBody) {
             console.log("["+LOCAL_ENDPOINT.NAME+"][reg]"+respBody);
         }
-    );
+    ); 
 }
 
 var dataItem = 0;
