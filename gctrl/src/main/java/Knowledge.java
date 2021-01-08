@@ -36,8 +36,9 @@ class Knowledge {
 	/*TODO : edit symptom, rfc, workflow_lists, plan*/
 	private static final List<String> symptom = Arrays.asList("N/A", "NOK", "OK");
 	private static final List<String> rfc = Arrays.asList("DoNotDoAnything", "DecreaseLatencyIn" + gw);
-	private static final List<String> workflow_lists = Arrays.asList("UC1", "UC2/UC3", "UC4/UC5/UC6", "UC7");
-	private static final List<String> plan = Arrays.asList("A", "B", "C", "D");
+	private static final List<String> workflow_lists = Arrays.asList("UC1", "UC2");
+	private static final List<String> plan = Arrays.asList("A", "B");
+
 	private final Map<String, String> gwinfo = new HashMap<>();
 	private final List<Map<String, String>> gwsinfo = new ArrayList<>();
 	private final String olddestip = "192.168.0.2";
@@ -47,15 +48,29 @@ class Knowledge {
 	private List<String> newgwsip;
 	private final String importantsrcip = "192.168.0.1";
 
-	//Test
+
+	static String IMG_LB = "vnf:lb";
+	static String IMG_GW = "vnf:gateway";
+	static String IMG_FILTER = "vnf:filter";
+	static String IMG_PROXY = "vnf:proxy";
+
 	public static final int switchA = 3;
 	public static final int switchB = 4;
 	public static final int portInA = 1;
 	public static final int portInB = 1;
 	public static final int portDCA = 3;
 	public static final int portDCB = 3;
-	public static final String ipGFA = "10.0.0.3";
+
 	public static final String ipS = "10.0.0.1";
+	public static final int portS = 8080;
+	public static final String ipGI = "10.0.0.2";
+	public static final int portGI = 8181;
+	public static final String ipGFA = "10.0.0.3";
+	public static final int portGFA = 8282;
+	public static final String ipGFB = "10.0.0.4";
+	public static final int portGFB = 8383;
+
+
 
 	void start() throws Exception {
 		// delete the H2 database named 'test' in the user home directory

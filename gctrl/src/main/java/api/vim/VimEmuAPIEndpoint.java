@@ -18,6 +18,7 @@ public class VimEmuAPIEndpoint extends RestAPIEndpoint {
 		System.out.println("URL : "+url);
 		return rest.putForObject(url, compute, Vnf.class);
 	}
+
 	public void delRestComputeStop(String datacenter, String vnfName){
 		String url=endpoint + "compute/" + datacenter + "/" + vnfName;
 		System.out.println("URL : "+url);

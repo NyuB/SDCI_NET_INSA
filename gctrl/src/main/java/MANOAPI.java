@@ -16,10 +16,6 @@ import java.util.Random;
  */
 class MANOAPI {
 
-    private static String IMG_LB = "vnf:lb";
-    private static String IMG_GW = "vnf:gateway";
-    private static String IMG_FILTER = "vnf:filter";
-    private static String IMG_PROXY = "vnf:proxy";
     private static int PORT_DFLT = 8888;
 
     String deploy_gw(Map<String, String> vnfinfos) {
@@ -48,7 +44,7 @@ class MANOAPI {
 
     public Vnf addLoadBalancingVnf(VimEmuAPIEndpoint vim, String ipA, int portA,  String ipB, int portB, String dc, String name){
         ComputeStart computeStart = new ComputeStart();
-        computeStart.setImage(IMG_LB);
+        computeStart.setImage(Knowledge.IMG_LB);
         System.out.println("Sending vnf creation request "+computeStart.getImage());
         Vnf vnf = vim.putRestComputeStart(computeStart,dc,name);
         VnfConfig config = VnfConfig.ABConfig(ipA,portA,ipB,portB);
@@ -60,12 +56,11 @@ class MANOAPI {
         vnfConfigAPIEndpoint.putRestConfig(config,3,500);
         System.out.println("Sent configuration to vnf");
         return vnf;
-
     }
 
     public Vnf addGatewayVnf(VimEmuAPIEndpoint vim, String remoteIp, int remotePort, String dc, String name){
         ComputeStart computeStart = new ComputeStart();
-        computeStart.setImage(IMG_GW);
+        computeStart.setImage(Knowledge.IMG_GW);
         System.out.println("Sending vnf creation request "+computeStart.getImage());
         Vnf vnf = vim.putRestComputeStart(computeStart,dc,name);
         String ipWithoutMask = vnf.mnIP();
@@ -81,7 +76,7 @@ class MANOAPI {
 
     public Vnf addFilterVnf(VimEmuAPIEndpoint vim, String vip, String remoteIp, int remotePort, String dc, String name){
     	ComputeStart computeStart = new ComputeStart();
-    	computeStart.setImage(IMG_FILTER);
+    	computeStart.setImage(Knowledge.IMG_FILTER);
     	System.out.println("Sending vnf creation request "+computeStart.getImage());
         Vnf vnf = vim.putRestComputeStart(computeStart,dc,name);
         String allocatedIp = vnf.getNetwork().get(0).getIp();
@@ -97,7 +92,7 @@ class MANOAPI {
 
     public Vnf addProxyVnf(VimEmuAPIEndpoint vim, String dc, String name){
         ComputeStart computeStart = new ComputeStart();
-        computeStart.setImage(IMG_PROXY);
+        computeStart.setImage(Knowledge.IMG_PROXY);
         System.out.println("Sending vnf creation request "+computeStart.getImage());
         Vnf vnf = vim.putRestComputeStart(computeStart, dc, name);
         String allocatedIp = vnf.getNetwork().get(0).getIp();
