@@ -118,6 +118,7 @@ app.get('/ping', function(req, res) {
     console.log(req.body);
     res.status(E_OK).send({pong: Date.now()});
 });
+
 app.get('/health', function(req, res) {
     console.log(req.body);
     si.currentLoad((d) => {
