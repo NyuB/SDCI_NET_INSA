@@ -38,6 +38,14 @@ public class Action  {
 		return res;
 	}
 
+	public static Action SwitchPortDest(int newPort){
+		Action res = new Action();
+		res.type = SET_FIELD;
+		res.field = "tp_src";
+		res.value = String.valueOf(newPort);
+		return res;
+	}
+
 	public static Action SetField(String field, String value){
 		Action res = new Action();
 		res.type = SET_FIELD;
