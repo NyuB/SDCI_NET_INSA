@@ -70,8 +70,6 @@ class Knowledge {
 	public static final String ipGFB = "10.0.0.4";
 	public static final int portGFB = 8383;
 
-
-
 	void start() throws Exception {
 		// delete the H2 database named 'test' in the user home directory
 		DeleteDbFiles.execute("~", "test", true);

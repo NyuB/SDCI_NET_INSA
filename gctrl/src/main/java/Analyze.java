@@ -53,7 +53,7 @@ class Analyze {
             return rfcs.get(0);
         } else if (symptom.contentEquals(symptoms.get(1))) {
             i++;
-            if (i < 4) {
+            if (i < 1000) {
                 Main.logger(this.getClass().getSimpleName(), "RFC --> To plan : " + rfcs.get(1));
                 return rfcs.get(1);
             } else {
