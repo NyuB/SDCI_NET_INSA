@@ -46,18 +46,18 @@ class Execute {
 						break;
 					case "UC2"://Deploy gw and redirect gfa
 						Main.logger(this.getClass().getSimpleName(), "Adding Gateway in DC");
-						vnf = manoapi.addGatewayVnf(vim, "10.0.0.1", 8080, "DC", "gwUC2");
+						vnf = manoapi.addGatewayVnf(vim, "10.0.0.1", Knowledge.portS, "DC", "gwUC2");
 						ipWithoutMask = vnf.mnIP();
 						Main.logger(this.getClass().getSimpleName(), "Redirecting GFA traffic to new GW");
-						sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipS, 8888);
+						sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888);
 						break;
 					case "UC3"://Filter non-gfa traffic
 						Main.logger(this.getClass().getSimpleName(), "Adding filter in DC");
 						vnf = manoapi.addFilterVnf(vim, Knowledge.ipGFA,Knowledge.ipS, Knowledge.portS,"DC","filterUC3");
 						ipWithoutMask = vnf.mnIP();
 						Main.logger(this.getClass().getSimpleName(), "Redirecting all gf traffics to vnf");
-						sdnctlrapi.vnfInTheMiddle(ryu,Knowledge.switchB,Knowledge.portDCB,Knowledge.portInB,Knowledge.ipGFB,ipWithoutMask,Knowledge.ipS, 8888);
-						sdnctlrapi.vnfInTheMiddle(ryu,Knowledge.switchA,Knowledge.portDCA,Knowledge.portInA,Knowledge.ipGFA,ipWithoutMask,Knowledge.ipS, 8888);
+						sdnctlrapi.vnfInTheMiddle(ryu,Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888);
+						sdnctlrapi.vnfInTheMiddle(ryu,Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888);
 						break;
 					default:
 						break;

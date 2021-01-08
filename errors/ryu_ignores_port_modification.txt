@@ -1,0 +1,2 @@
+When using "SET_FIELD" "tcp_dst" 1234 => action is ignored in flow rule (empty action set or only the other actions)
+Same using "SET_TP_DST" 
