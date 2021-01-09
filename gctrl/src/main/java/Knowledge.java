@@ -376,8 +376,8 @@ class Knowledge {
 
 	}
 
-	public static void setUseCase(int index,String useCase){
-		workflow_lists.set(index,useCase);
+	public static void setUseCase(int index, String useCase) {
+		workflow_lists.set(index, useCase);
 	}
 
 	public Map<String, String> getGwinfo() {

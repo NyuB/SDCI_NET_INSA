@@ -8,7 +8,7 @@ public class Match {
 	private Integer in_port = null;
 	private static final String DEFAULT_ETH_TYPE = "0x0800";
 
-	public static Match  Ipv4SrcDest(String src, String dest){
+	public static Match Ipv4SrcDest(String src, String dest) {
 		Match res = new Match();
 		res.ipv4_src = src;
 		res.ipv4_dst = dest;
@@ -16,7 +16,7 @@ public class Match {
 		return res;
 	}
 
-	public static Match  Ipv4Src(String src){
+	public static Match Ipv4Src(String src) {
 		Match res = new Match();
 		res.ipv4_src = src;
 		res.eth_type = DEFAULT_ETH_TYPE;
@@ -24,7 +24,7 @@ public class Match {
 	}
 
 
-	public Match(){
+	public Match() {
 
 	}
 

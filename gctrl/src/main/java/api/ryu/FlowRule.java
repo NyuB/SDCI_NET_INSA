@@ -1,30 +1,29 @@
 package api.ryu;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class FlowRule {
 	private int dpid;
-	private int priority=0;
+	private int priority = 0;
 	private int table_id = 0;
 	private int idle_timeout = 6000;
-	private int hard_timeout= 6000;
+	private int hard_timeout = 6000;
 	private Integer flags = null;
-	private Integer cookie=null;
+	private Integer cookie = null;
 	private Integer cookie_mask = null;
 	private List<Action> actions = Action.DROP();
 	private Match match = new Match();
 
-	public static FlowRule DropIpv4(int switchId, int priority,String src,String dest){
+	public static FlowRule DropIpv4(int switchId, int priority, String src, String dest) {
 		FlowRule res = new FlowRule();
 		res.dpid = switchId;
 		res.priority = priority;
-		Match match = Match.Ipv4SrcDest(src,dest);
+		Match match = Match.Ipv4SrcDest(src, dest);
 		res.match = match;
 		return res;
 	}
 
-	public static FlowRule RedirectIpv4(int switchId, int priority, String src, String newDest, int newPort){
+	public static FlowRule RedirectIpv4(int switchId, int priority, String src, String newDest, int newPort) {
 		FlowRule res = new FlowRule();
 		res.dpid = switchId;
 		res.priority = priority;
@@ -35,15 +34,16 @@ public class FlowRule {
 		return res;
 	}
 
-	public FlowRule(){
+	public FlowRule() {
 
 	}
 
-	public void queueAction(Action a){
+	public void queueAction(Action a) {
 		this.actions.add(a);
 	}
-	public void topAction(Action a){
-		this.actions.add(0,a);
+
+	public void topAction(Action a) {
+		this.actions.add(0, a);
 	}
 
 	public int getDpid() {

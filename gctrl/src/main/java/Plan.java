@@ -20,9 +20,9 @@ import java.util.List;
 
 @SuppressWarnings({"SynchronizeOnNonFinalField"})
 class Plan {
-	private static int i;
+	private int nextPlan = 0;
 	public String gw_PLAN = "";
-	private int nbSymptom;
+	private int nbSymptoms;
 
 	void start() {
 		Main.logger(this.getClass().getSimpleName(), "Start Planning");
@@ -55,27 +55,34 @@ class Plan {
 		if ("YourPlansDoNotWork".contentEquals(rfc)) {
 			// Thread.sleep(2000);
 			//Main.run = false;
-			Main.logger(this.getClass().getSimpleName(), "All the Plans were executed without success. \n \t\t The loop will stop!");
-			Main.logger(this.getClass().getSimpleName(), "All the Plans were executed and without effect :( . \n \t\t Wait and hope it is only a matter of time!");
+			//Main.logger(this.getClass().getSimpleName(), "All the Plans were executed without success. \n \t\t The loop will stop!");
+			Main.logger(this.getClass().getSimpleName(), "All the Plans were executed without success :( . \n \t\t Wait and hope it is only a matter of time!");
 			return plans.get(0);//Just wait instead of exiting immediatly
 			// Terminate JVM
 			//System.exit(0);
 		} else if (rfc.contentEquals(rfcs.get(0))) {
-			nbSymptom = 0;
+			nbSymptoms = 0;
+			Main.logger(this.getClass().getSimpleName(), "No symptom detected, everything is OK");
 			Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(0));
-			i = 0;
+			//nextPlan = 0; Don't reset the plans until actual backward actions(e.g undeploying vnf) are implemented
 			return plans.get(0);
 		} else if (rfc.contentEquals(rfcs.get(1))) {
-			nbSymptom++;
-			boolean symptom_ko = nbSymptom > 2;
-			Main.logger(this.getClass().getSimpleName(), "Consecutive alert symptoms : " + nbSymptom);
-			if (i == 0 && symptom_ko) {
-				Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(1));
-				i++;
-				nbSymptom = 0;
-				return plans.get(1);
+			nbSymptoms++;
+			boolean symptom_ko = nbSymptoms > 2;
+			Main.logger(this.getClass().getSimpleName(), "Consecutive alert symptoms : " + nbSymptoms);
+			if (symptom_ko) {
+				if (nextPlan == 0) {
+					nextPlan++;
+					nbSymptoms = 0;
+					Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(1));
+					return plans.get(1);
+				} else { //Insert other plans here
+					Main.logger(this.getClass().getSimpleName(), "No more plans available...wait and pray !");
+					Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(0));
+					return plans.get(0);
+				}
 			} else {
-				Main.logger(this.getClass().getSimpleName(), "No more plans available...wait and pray");
+				Main.logger(this.getClass().getSimpleName(), "Wait and watch before executing plan");
 				Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(0));
 				return plans.get(0);
 			}

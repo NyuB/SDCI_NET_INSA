@@ -1,7 +1,7 @@
 package api.ryu;
 
-public class SetIntFieldAction extends Action {
-	private Integer value;
+public class SetIntFieldAction extends SetFieldAction {
+	protected Integer value;
 
 	public SetIntFieldAction() {
 		super();

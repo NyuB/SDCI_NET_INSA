@@ -5,7 +5,7 @@ public class HealthResponse {
 	private double avgload;
 	private double currentload;
 
-	public HealthCPU[] cpus ;
+	public HealthCPU[] cpus;
 
 	public double getCurrentload() {
 		return currentload;

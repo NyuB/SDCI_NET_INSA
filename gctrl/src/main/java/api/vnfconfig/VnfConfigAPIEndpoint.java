@@ -8,16 +8,16 @@ public class VnfConfigAPIEndpoint extends RestAPIEndpoint {
 		super(endpoint);
 	}
 
-	public void putRestConfig(VnfConfig config){
-		rest.put(endpoint+"config",config);
+	public void putRestConfig(VnfConfig config) {
+		rest.put(endpoint + "config", config);
 	}
-	public void putRestConfig(VnfConfig config, int retries, int period){
-		for(int i = 0;i<retries;i++){
-			try{
+
+	public void putRestConfig(VnfConfig config, int retries, int period) {
+		for (int i = 0; i < retries; i++) {
+			try {
 				putRestConfig(config);
 				return;
-			}
-			catch (Exception e){
+			} catch (Exception e) {
 				System.out.println("Retrying config request");
 				try {
 					Thread.sleep(period);

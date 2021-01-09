@@ -1,7 +1,9 @@
+import api.ryu.FlowRule;
 import api.ryu.RyuAPIEndpoint;
 import api.vim.VimEmuAPIEndpoint;
 import api.vim.Vnf;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //
@@ -22,6 +24,9 @@ class Execute {
 	private static final SDNCtrlAPI sdnctlrapi = new SDNCtrlAPI();
 	private static final VimEmuAPIEndpoint vim = new VimEmuAPIEndpoint("127.0.0.1", 5001);
 	private static final RyuAPIEndpoint ryu = new RyuAPIEndpoint("127.0.0.1", 8080);
+	private static Vnf additionalGW = null;
+	private static Vnf filter = null;
+	private static List<FlowRule> activeRules = new ArrayList<>();
 
 	void start() throws InterruptedException {
 		Main.logger(this.getClass().getSimpleName(), "Start Execution");
@@ -39,25 +44,24 @@ class Execute {
 			for (String w : workflow) {
 				Main.logger(this.getClass().getSimpleName(), "UC : " + w);
 				String ipWithoutMask;
-				Vnf vnf;
 				switch (w) {
 					case "UC1":
 						Main.logger(this.getClass().getSimpleName(), "Nothing to do");
 						break;
 					case "UC2"://Deploy gw and redirect gfa
 						Main.logger(this.getClass().getSimpleName(), "Adding Gateway in DC");
-						vnf = manoapi.addGatewayVnf(vim, "10.0.0.1", Knowledge.portS, "DC", "gwUC2");
-						ipWithoutMask = vnf.mnIP();
+						additionalGW = manoapi.addGatewayVnf(vim, "10.0.0.1", Knowledge.portS, "DC", "gwUC2");
+						ipWithoutMask = additionalGW.mnIP();
 						Main.logger(this.getClass().getSimpleName(), "Redirecting GFA traffic to new GW");
-						sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888);
+						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						break;
 					case "UC3"://Filter non-gfa traffic
 						Main.logger(this.getClass().getSimpleName(), "Adding filter in DC");
-						vnf = manoapi.addFilterVnf(vim, Knowledge.ipGFA,Knowledge.ipGI, Knowledge.portGI,"DC","filterUC3");
-						ipWithoutMask = vnf.mnIP();
+						filter = manoapi.addFilterVnf(vim, Knowledge.ipGFA, Knowledge.ipGI, Knowledge.portGI, "DC", "filterUC3");
+						ipWithoutMask = filter.mnIP();
 						Main.logger(this.getClass().getSimpleName(), "Redirecting all gf traffics to vnf");
-						sdnctlrapi.vnfInTheMiddle(ryu,Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888);
-						sdnctlrapi.vnfInTheMiddle(ryu,Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888);
+						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						break;
 					default:
 						break;

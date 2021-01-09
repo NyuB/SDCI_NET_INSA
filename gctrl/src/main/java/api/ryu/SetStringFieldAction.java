@@ -1,10 +1,10 @@
 package api.ryu;
 
-public class SetStringFieldAction extends Action {
-	private String value;
+public class SetStringFieldAction extends SetFieldAction {
+	protected String value;
+
 	public SetStringFieldAction() {
 		super();
-		this.type = Action.SET_FIELD;
 	}
 
 	public String getValue() {
