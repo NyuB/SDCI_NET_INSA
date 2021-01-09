@@ -64,7 +64,6 @@ function register() {
     );
 }
 
-
 app.post('/gateways/register', function(req, res) {
     console.log(req.body);
     var result = addNewGateway(req.body);
@@ -73,6 +72,7 @@ app.post('/gateways/register', function(req, res) {
     else
         res.sendStatus(E_ALREADY_EXIST);  
  });
+
 app.post('/devices/register', function(req, res) {
     console.log(req.body);
     doPOST(
@@ -84,6 +84,7 @@ app.post('/devices/register', function(req, res) {
         }
     )
  });
+
  app.post('/device/:dev/data', function(req, res) {
     console.log(req.body);
     var dev = req.params.dev;
@@ -91,11 +92,12 @@ app.post('/devices/register', function(req, res) {
         'http://' + REMOTE_ENDPOINT.IP + ':' +REMOTE_ENDPOINT.PORT + '/device/' + dev + '/data',
         req.body,
         function(error, response, respBody) {
-            console.log("Resp final : "+respBody);
+            console.log(respBody);
             res.sendStatus(E_OK); 
         }
     )
 });
+
 app.get('/gateways', function(req, res) {
     console.log(req.body);
     let resObj = [];
@@ -104,6 +106,7 @@ app.get('/gateways', function(req, res) {
     });
     res.send(resObj);
 });
+
 app.get('/gateway/:gw', function(req, res) {
     console.log(req.body);
     var gw = req.params.gw;
@@ -118,11 +121,14 @@ app.get('/ping', function(req, res) {
     console.log(req.body);
     res.status(E_OK).send({pong: Date.now()});
 });
+
 app.get('/health', function(req, res) {
     console.log(req.body);
     si.currentLoad((d) => {
         console.log(d);
-        res.status(E_OK).send(JSON.stringify(d));
+        //res.status(E_OK).send({currentload:d.currentload});
+	res.status(E_OK).send(d);
+
     })
 });
 

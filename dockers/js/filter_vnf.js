@@ -10,8 +10,8 @@ var configured = false;//Indicate if the VNF has been configured
 
 http.createServer(function (req, res) {
 	if(configured){//Wait configuration before applying NF
-		console.log(req.ip);
-		if (req.ip == VIP) {
+		console.log(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+		if ((req.headers['x-forwarded-for'] || req.connection.remoteAddress) == VIP) {
 	    	   req.forward = {target:"http://"+REMOTE_ENDPOINT.IP+":"+REMOTE_ENDPOINT.PORT};
 	    	   forward(req, res);
 		}
