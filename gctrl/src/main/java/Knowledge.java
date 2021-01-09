@@ -55,9 +55,9 @@ class Knowledge {
 	static String IMG_PROXY = "vnf:proxy";
 
 	public static final int switchA = 3;
-	public static final int switchB = 4;
+	public static final int switchB = 3;
 	public static final int portInA = 1;
-	public static final int portInB = 1;
+	public static final int portInB = 2;
 	public static final int portDCA = 3;
 	public static final int portDCB = 3;
 

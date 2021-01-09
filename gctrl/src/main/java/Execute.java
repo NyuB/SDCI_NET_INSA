@@ -53,7 +53,7 @@ class Execute {
 						break;
 					case "UC3"://Filter non-gfa traffic
 						Main.logger(this.getClass().getSimpleName(), "Adding filter in DC");
-						vnf = manoapi.addFilterVnf(vim, Knowledge.ipGFA,Knowledge.ipS, Knowledge.portS,"DC","filterUC3");
+						vnf = manoapi.addFilterVnf(vim, Knowledge.ipGFA,Knowledge.ipGI, Knowledge.portGI,"DC","filterUC3");
 						ipWithoutMask = vnf.mnIP();
 						Main.logger(this.getClass().getSimpleName(), "Redirecting all gf traffics to vnf");
 						sdnctlrapi.vnfInTheMiddle(ryu,Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888);

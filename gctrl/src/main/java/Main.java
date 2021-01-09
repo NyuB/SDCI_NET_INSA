@@ -43,7 +43,7 @@ class Main {
 
         Map<String,String> options = parseOptions(args);
         if(options.containsKey("uc")){
-            Knowledge.setUseCase(1,options.get("UC"));
+            Knowledge.setUseCase(1,options.get("uc"));
         }
         if(options.containsKey("lat")){
             Knowledge.gw_lat_threshold = Double.parseDouble(options.get("lat"));
