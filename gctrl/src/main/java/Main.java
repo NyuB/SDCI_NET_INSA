@@ -57,6 +57,9 @@ class Main {
 		if(options.containsKey("mfreq")){
 			Monitor.period= Integer.parseInt(options.get("mfreq"));
 		}
+		if(options.containsKey("mmode")){
+			Monitor.mode = Integer.parseInt(options.get("mmode"));
+		}
 
 		shared_knowledge.start();
 		Thread.sleep(3000);

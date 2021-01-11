@@ -38,6 +38,7 @@ class Monitor {
 	private static List<String> symptom;
 	static int period = 500; //Monitoring period 2000 au départ
 	static int loopPeriod = 2500;//period * 5
+	static int mode = 1;
 	private static double i = 0;
 	public GatewayAPIEndpoint gw_sensor;
 	public String gw_current_SYMP = "N/A";
@@ -93,7 +94,7 @@ class Monitor {
 				try {
 					//TODO: Remove this
 					Thread.sleep(period);
-					Main.shared_knowledge.insert_in_tab(new java.sql.Timestamp(new java.util.Date().getTime()), get_data(1));
+					Main.shared_knowledge.insert_in_tab(new java.sql.Timestamp(new java.util.Date().getTime()), get_data(mode));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
