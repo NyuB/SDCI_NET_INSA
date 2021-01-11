@@ -51,9 +51,9 @@ class MANOAPI {
 		Vnf vnf = vim.putRestComputeStart(computeStart, dc, name);
 		VnfConfig config = VnfConfig.ABConfig(ipA, portA, ipB, portB);
 		String allocatedIp = vnf.getNetwork().get(0).getIp();
-		String cheatIp = vnf.getDocker_network();
+		String dockerIp = vnf.getDocker_network();
 		System.out.println("VNF created, IP allocated : " + allocatedIp + ":" + PORT_DFLT);
-		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
+		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, PORT_DFLT);
 		System.out.println("Sending configuration request to vnf");
 		vnfConfigAPIEndpoint.putRestConfig(config, RETRIES_DFLT, RETRY_PERIOD_DFLT);
 		System.out.println("Sent configuration to vnf");
@@ -66,10 +66,10 @@ class MANOAPI {
 		System.out.println("Sending vnf creation request " + computeStart.getImage());
 		Vnf vnf = vim.putRestComputeStart(computeStart, dc, name);
 		String ipWithoutMask = vnf.mnIP();
-		String cheatIp = vnf.getDocker_network();
+		String dockerIp = vnf.getDocker_network();
 		System.out.println("VNF created, IP allocated : " + ipWithoutMask + ":" + PORT_DFLT);
 		VnfConfig config = VnfConfig.LocalRemoteConfig(ipWithoutMask, remoteIp, remotePort);
-		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
+		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, PORT_DFLT);
 		System.out.println("Sending configuration request to vnf");
 		vnfConfigAPIEndpoint.putRestConfig(config, RETRIES_DFLT, RETRY_PERIOD_DFLT);
 		System.out.println("Sent configuration to vnf");
@@ -82,10 +82,10 @@ class MANOAPI {
 		System.out.println("Sending vnf creation request " + computeStart.getImage());
 		Vnf vnf = vim.putRestComputeStart(computeStart, dc, name);
 		String allocatedIp = vnf.getNetwork().get(0).getIp();
-		String cheatIp = vnf.getDocker_network();
+		String dockerIp = vnf.getDocker_network();
 		System.out.println("VNF created, IP allocated : " + allocatedIp + ":" + PORT_DFLT);
 		VnfConfig config = VnfConfig.VipRemoteConfig(vip, remoteIp, remotePort);
-		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(cheatIp, PORT_DFLT);
+		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, PORT_DFLT);
 		System.out.println("Sending configuration request to vnf");
 		vnfConfigAPIEndpoint.putRestConfig(config, RETRIES_DFLT, RETRY_PERIOD_DFLT);
 		System.out.println("Sent configuration to vnf");
@@ -98,9 +98,13 @@ class MANOAPI {
 		System.out.println("Sending vnf creation request " + computeStart.getImage());
 		Vnf vnf = vim.putRestComputeStart(computeStart, dc, name);
 		String allocatedIp = vnf.getNetwork().get(0).getIp();
-		String cheatIp = vnf.getDocker_network();
+		String dockerIp = vnf.getDocker_network();
 		System.out.println("VNF created, IP allocated : " + allocatedIp);
-		System.out.println("Docker @ddr : " + cheatIp + ":" + PORT_DFLT);
+		System.out.println("Docker @ddr : " + dockerIp + ":" + PORT_DFLT);
 		return vnf;
+	}
+
+	public void removeVnf(VimEmuAPIEndpoint vim, String dc, String vnfName){
+		vim.delRestComputeStop(dc,vnfName);
 	}
 }

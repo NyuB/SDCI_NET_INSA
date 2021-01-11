@@ -45,8 +45,17 @@ class Main {
 		if (options.containsKey("uc")) {
 			Knowledge.setUseCase(1, options.get("uc"));
 		}
-		if (options.containsKey("lat")) {
-			Knowledge.gw_lat_threshold = Double.parseDouble(options.get("lat"));
+		if (options.containsKey("sup")) {
+			Knowledge.gw_lat_threshold = Double.parseDouble(options.get("sup"));
+		}
+		if(options.containsKey("inf")){
+			Knowledge.gw_lat_inf_threshold = Double.parseDouble(options.get("inf"));
+		}
+		if(options.containsKey("lfreq")){
+			Monitor.loopPeriod = Integer.parseInt(options.get("lfreq"));
+		}
+		if(options.containsKey("mfreq")){
+			Monitor.period= Integer.parseInt(options.get("mfreq"));
 		}
 
 		shared_knowledge.start();

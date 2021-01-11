@@ -32,6 +32,7 @@ class Knowledge {
 	static final int horizon = 3;
 	static final String gw = "GW_I";
 	static double gw_lat_threshold = 25;
+	static double gw_lat_inf_threshold = .0;
 
 	/*TODO : edit symptom, rfc, workflow_lists, plan*/
 	private static final List<String> symptom = Arrays.asList("N/A", "NOK", "OK");

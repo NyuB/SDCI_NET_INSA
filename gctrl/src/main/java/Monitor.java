@@ -36,7 +36,8 @@ import java.util.List;
 @SuppressWarnings({"SynchronizeOnNonFinalField"})
 class Monitor {
 	private static List<String> symptom;
-	private static final int period = 2000; //2000 au départ
+	static int period = 500; //Monitoring period 2000 au départ
+	static int loopPeriod = 2500;//period * 5
 	private static double i = 0;
 	public GatewayAPIEndpoint gw_sensor;
 	public String gw_current_SYMP = "N/A";
@@ -57,7 +58,7 @@ class Monitor {
 	private void symptom_generator() {
 		while (Main.run)
 			try {
-				Thread.sleep(period * 5);
+				Thread.sleep(loopPeriod);
 				ResultSet rs = Main.shared_knowledge.select_from_tab();
 				//print_nice_rs(rs);
 				double[] prediction = predict_next_lat(rs);
@@ -68,7 +69,7 @@ class Monitor {
 						update_symptom(symptom.get(1));
 						isOk = false;
 						break;
-					} else if (prediction[j] < .0) {
+					} else if (prediction[j] < Knowledge.gw_lat_inf_threshold) {
 						Main.logger(this.getClass().getSimpleName(), " Symptom --> To Analyse : " + symptom.get(0));
 						update_symptom(symptom.get(0));
 						isOk = false;
@@ -92,7 +93,7 @@ class Monitor {
 				try {
 					//TODO: Remove this
 					Thread.sleep(period);
-					Main.shared_knowledge.insert_in_tab(new java.sql.Timestamp(new java.util.Date().getTime()), get_data(2));
+					Main.shared_knowledge.insert_in_tab(new java.sql.Timestamp(new java.util.Date().getTime()), get_data(1));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
