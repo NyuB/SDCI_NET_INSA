@@ -1,2 +1,39 @@
-When using "SET_FIELD" "tcp_dst" 1234 => action is ignored in flow rule (empty action set or only the other actions)
-Same using "SET_TP_DST" 
+Règles par défaut du switch 3 au lancement de la topologie : 
+	> curl -i -v http://localhost:8080/stats/flow/3
+
+	>> {"3": [{"actions": ["OUTPUT:NORMAL"], "idle_timeout": 0, "cookie": 0, "packet_count": 1169, "hard_timeout": 0, "byte_count": 125116, "duration_sec": 40, "duration_nsec": 560000000, "priority": 0, "length": 80, "flags": 0, "table_id": 0, "match": {}}]}
+
+
+Exemple OK : Ajout règle de changement d'ip
+
+	> curl -i -v -X POST -d '{"dpid":3,  "idle_timeout":3000, "hard_timeout":3000, "priority":42, "match":{ "ipv4_dst":"10.0.0.1", "eth_type":"0x0800"}, "actions":[ {"type":"SET_FIELD","field":"ipv4_dsue":"10.0.0.2"}, {"type":"OUTPUT", "port":2}]}' http://localhost:8080/stats/flowentry/add
+	
+	>> HTTP/1.1 200 OK
+
+	> curl -i -v http://localhost:8080/stats/flow/3
+	
+	>> {"3": [{"actions": ["SET_FIELD: {ipv4_dst:10.0.0.2}", "OUTPUT:2"], "idle_timeout": 3000, "cookie": 0, "packet_count": 0, "hard_timeout": 3000, "byte_count": 0, "duration_sec": 23, "duration_nsec": 27000000, "priority": 42, "length": 112, "flags": 0, "table_id": 0, "match": {"dl_type": 2048, "nw_dst": "10.0.0.1"}}, {"actions": ["OUTPUT:NORMAL"], "idle_timeout": 0, "cookie": 0, "packet_count": 16420, "hard_timeout": 0, "byte_count": 1777828, "duration_sec": 345, "duration_nsec": 216000000, "priority": 0, "length": 80, "flags": 0, "table_id": 0, "match": {}}]}
+
+Exemple Problème Ajout règle changement de port:
+	
+	En utilisant SET_FIELD : la requête est acceptée mais l'ajout de règle ne s'effectue pas:
+
+		> curl -i -v -X POST -d '{"dpid":3,  "idle_timeout":3000, "hard_timeout":3000, "priority":42, "match":{ "ipv4_dst":"10.0.0.1", "eth_type":"0x0800"}, "actions":[ {"type":"SET_FIELD","field":"tcp_dst","value":8888}, {"type":"OUTPUT", "port":2}]}' http://localhost:8080/stats/flowentry/add
+
+		>> HTTP/1.1 200 OK
+
+		> curl -i -v http://localhost:8080/stats/flow/3
+
+		>> {"3": [{"actions": ["OUTPUT:NORMAL"], "idle_timeout": 0, "cookie": 0, "packet_count": 29500, "hard_timeout": 0, "byte_count": 3195889, "duration_sec": 606, "duration_nsec": 491000000, "priority": 0, "length": 80, "flags": 0, "table_id": 0, "match": {}}]}
+
+		
+
+	En utilisant SET_TP_DST (Openflow 1.0) : la requête est acceptée, la règle ajoutée, mais l'action de changement de port est ignorée(supprimée de la liste)
+
+		> curl -i -v -X POST -d '{"dpid":3,  "idle_timeout":3000, "hard_timeout":3000, "priority":42, "match":{ "ipv4_dst":"10.0.0.1", "eth_type":"0x0800"}, "actions":[ {"type":"SET_TP_DST","tp_dst":8888}, {"type":"OUTPUT", "port":2}]}' http://localhost:8080/stats/flowentry/add
+
+		>> HTTP/1.1 200 OK
+
+		> curl -i -v http://localhost:8080/stats/flow/3
+
+		>> {"3": [{"actions": ["OUTPUT:2"], "idle_timeout": 3000, "cookie": 0, "packet_count": 0, "hard_timeout": 3000, "byte_count": 0, "duration_sec": 3, "duration_nsec": 896000000, "priority": 42, "length": 96, "flags": 0, "table_id": 0, "match": {"dl_type": 2048, "nw_dst": "10.0.0.1"}}, {"actions": ["OUTPUT:NORMAL"], "idle_timeout": 0, "cookie": 0, "packet_count": 48386, "hard_timeout": 0, "byte_count": 5243694, "duration_sec": 984, "duration_nsec": 433000000, "priority": 0, "length": 80, "flags": 0, "table_id": 0, "match": {}}]}

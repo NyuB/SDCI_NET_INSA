@@ -1,1 +1,1 @@
-{ "dpid":1,  "idle_timeout":3000, "hard_timeout":3000, "priority":0, "match":{ "ipv4_dst":"10.0.0.1", "eth_type":"0x0800"}, "actions":[ {"type":"SET_FIELD","field":"ipv4_dst","value":"10.0.0.2"}, {"type":"OUTPUT", "port":1}]}
+{ "dpid":3,  "idle_timeout":3000, "hard_timeout":3000, "priority":0, "match":{ "ipv4_dst":"10.0.0.1", "eth_type":"0x0800"}, "actions":[ {"type":"SET_FIELD","field":"ipv4_dst","value":"10.0.0.2"}, {"type":"OUTPUT", "port":1}]}
