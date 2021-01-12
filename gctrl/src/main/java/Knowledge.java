@@ -36,9 +36,9 @@ class Knowledge {
 
 	/*TODO : edit symptom, rfc, workflow_lists, plan*/
 	private static final List<String> symptom = Arrays.asList("N/A", "NOK", "OK");
-	private static final List<String> rfc = Arrays.asList("DoNotDoAnything", "DecreaseLatencyIn" + gw);
-	private static final List<String> workflow_lists = Arrays.asList("UC1", "UC2");
-	private static final List<String> plan = Arrays.asList("A", "B");
+	private static final List<String> rfc = Arrays.asList("DoNotDoAnything", "DecreaseLatencyIn" + gw, "ResetAddedResources");
+	private static final List<String> workflow_lists = Arrays.asList("UC1", "UC2", "UC0");
+	private static final List<String> plan = Arrays.asList("A", "B", "Z");
 
 	private final Map<String, String> gwinfo = new HashMap<>();
 	private final List<Map<String, String>> gwsinfo = new ArrayList<>();
@@ -51,6 +51,7 @@ class Knowledge {
 
 
 	static String IMG_LB = "vnf:lb";
+	static String IMG_MLB = "vnf:mlb";
 	static String IMG_GW = "vnf:gateway";
 	static String IMG_FILTER = "vnf:filter";
 	static String IMG_PROXY = "vnf:proxy";
@@ -70,6 +71,9 @@ class Knowledge {
 	public static final int portGFA = 8888;
 	public static final String ipGFB = "10.0.0.4";
 	public static final int portGFB = 8888;
+
+	public static String monitoredIP = ipGI;
+	public static int monitoredPort = portGI;
 
 	void start() throws Exception {
 		// delete the H2 database named 'test' in the user home directory

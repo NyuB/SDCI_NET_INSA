@@ -16,14 +16,19 @@ import java.util.Map;
 
 class Main {
 	static boolean run = true;
-	private static final VimEmuAPIEndpoint vim = new VimEmuAPIEndpoint("http://localhost:5001");
+	private static final boolean log = true;
+
 	static final Monitor monitor = new Monitor();
 	static final Analyze analyze = new Analyze();
 	static final Plan plan = new Plan();
 	private static final Execute execute = new Execute();
 	static final Knowledge shared_knowledge = new Knowledge();
-	private static final boolean log = true;
+
+	private static final VimEmuAPIEndpoint vim = new VimEmuAPIEndpoint("http://localhost:5001");
 	private static final MANOAPI manoapi = new MANOAPI();
+
+
+
 
 	private static Map<String, String> parseOptions(String[] cmd, String token, int index) {
 		Map<String, String> res = new HashMap<>();
@@ -65,7 +70,7 @@ class Main {
 		Thread.sleep(3000);
 		Vnf proxy = manoapi.addProxyVnf(vim, "DC", "proxy");
 		String dockerIP = proxy.getDocker_network();
-		monitor.gw_sensor = new ProxyGatewayAPIEndpoint(dockerIP, 8888, monitor.monitoredIP, monitor.monitoredPort);
+		monitor.gw_sensor = new ProxyGatewayAPIEndpoint(dockerIP, 8888, Knowledge.monitoredIP, Knowledge.monitoredPort);
 		Thread thread_m = new Thread(() -> {
 			try {
 				monitor.start();

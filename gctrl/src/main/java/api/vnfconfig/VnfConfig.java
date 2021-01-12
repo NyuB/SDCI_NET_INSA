@@ -1,5 +1,8 @@
 package api.vnfconfig;
 
+import api.EndpointInfo;
+
+import java.util.List;
 import java.util.Map;
 
 public class VnfConfig {
@@ -13,6 +16,7 @@ public class VnfConfig {
 	private Integer remote_port = null;
 	private String remote_name;
 	private String vip;
+	private List<EndpointInfo> endpoints = null;
 
 	public static VnfConfig ABConfig(String ip_A, int port_A, String ip_B, int port_B) {
 		VnfConfig res = new VnfConfig();
@@ -36,6 +40,12 @@ public class VnfConfig {
 		res.setVip(vip);
 		res.setRemote_ip(remoteIp);
 		res.setRemote_port(remotePort);
+		return res;
+	}
+
+	public static VnfConfig EndpointsListConfig(List<EndpointInfo> endpoints){
+		VnfConfig res = new VnfConfig();
+		res.setEndpoints(endpoints);
 		return res;
 	}
 
@@ -138,4 +148,11 @@ public class VnfConfig {
 		this.vip = vip;
 	}
 
+	public List<EndpointInfo> getEndpoints() {
+		return endpoints;
+	}
+
+	public void setEndpoints(List<EndpointInfo> endpoints) {
+		this.endpoints = endpoints;
+	}
 }

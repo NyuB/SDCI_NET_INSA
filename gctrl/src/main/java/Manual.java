@@ -145,7 +145,7 @@ public class Manual {
 				String dc = options.getOrDefault("dc", "DC");
 				int pA = Integer.parseInt(options.get("pA"));
 				int pB = Integer.parseInt(options.get("pB"));
-				Vnf vnf = manoapi.addLoadBalancingVnf(vim, ipA, pA, ipB, pB, dc, name);
+				Vnf vnf = manoapi.addDualLoadBalancerVnf(vim, ipA, pA, ipB, pB, dc, name);
 				System.out.println(vnf);
 			} else if (cmd[0].equals("addgate")) {//ipR= pR=
 				Map<String, String> options = parseOptions(cmd);

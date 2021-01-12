@@ -1,9 +1,11 @@
+import api.EndpointInfo;
 import api.ryu.FlowRule;
 import api.ryu.RyuAPIEndpoint;
 import api.vim.VimEmuAPIEndpoint;
 import api.vim.Vnf;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //
@@ -24,9 +26,11 @@ class Execute {
 	private static final SDNCtrlAPI sdnctlrapi = new SDNCtrlAPI();
 	private static final VimEmuAPIEndpoint vim = new VimEmuAPIEndpoint("127.0.0.1", 5001);
 	private static final RyuAPIEndpoint ryu = new RyuAPIEndpoint("127.0.0.1", 8080);
-	private static Vnf additionalGW = null;
+	private static Vnf dedicatedGW = null;
 	private static Vnf filter = null;
+	private static Vnf loadBalancer = null;
 	private static List<FlowRule> activeRules = new ArrayList<>();
+	private static List<Vnf> additionalGWs = new ArrayList<>();
 
 	void start() throws InterruptedException {
 		Main.logger(this.getClass().getSimpleName(), "Start Execution");
@@ -48,10 +52,10 @@ class Execute {
 					case "UC1":
 						Main.logger(this.getClass().getSimpleName(), "Nothing to do");
 						break;
-					case "UC2"://Deploy gw and redirect gfa
-						Main.logger(this.getClass().getSimpleName(), "Adding Gateway in DC");
-						additionalGW = manoapi.addGatewayVnf(vim, "10.0.0.1", Knowledge.portS, "DC", "gwUC2");
-						ipWithoutMask = additionalGW.mnIP();
+					case "UC2"://Deploy gw dedicated to gfa
+						Main.logger(this.getClass().getSimpleName(), "Adding Dedicated Gateway in DC");
+						dedicatedGW = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gwUC2");
+						ipWithoutMask = dedicatedGW.mnIP();
 						Main.logger(this.getClass().getSimpleName(), "Redirecting GFA traffic to new GW");
 						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						break;
@@ -62,6 +66,56 @@ class Execute {
 						Main.logger(this.getClass().getSimpleName(), "Redirecting all gf traffics to vnf");
 						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+						break;
+					case "UC4"://Add a gateway to load balancing pool
+						if(loadBalancer == null){
+							Main.logger(this.getClass().getSimpleName(), "Adding multi-load-balancer in DC");
+							loadBalancer = manoapi.addMultiLoadBalancerVnf(vim, "DC","mlbUC4");
+							ipWithoutMask = loadBalancer.mnIP();
+							EndpointInfo gi = new EndpointInfo(Knowledge.ipGI,Knowledge.portGI);
+							List<EndpointInfo> init = Collections.singletonList(gi);
+							manoapi.configMultiLoadBalancer(loadBalancer, init);
+							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+						}
+
+						Main.logger(this.getClass().getSimpleName(), "Adding gateway to load-balancing pool in DC");
+						Vnf gateway = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gw#"+additionalGWs.size());
+						additionalGWs.add(gateway);
+						List<EndpointInfo> infos = new ArrayList<>();
+
+						for(Vnf gw : additionalGWs){
+							infos.add(new EndpointInfo(gw.mnIP(),8888));
+						}
+
+						Main.logger(this.getClass().getSimpleName(), "Configuring  the load-balancer with updated gateways list");
+						manoapi.configMultiLoadBalancer(loadBalancer, infos);
+						break;
+					case "UC0":
+						for(FlowRule rule : activeRules){
+							sdnctlrapi.removeRule(ryu, rule);
+							activeRules.clear();
+						}
+
+						for(Vnf gw : additionalGWs){
+							manoapi.removeVnf(vim,"DC", gw.getName());
+							additionalGWs.clear();
+						}
+
+						if (dedicatedGW != null) {
+							manoapi.removeVnf(vim,"DC",dedicatedGW.getName());
+							dedicatedGW = null;
+						}
+
+						if (filter != null) {
+							manoapi.removeVnf(vim,"DC",filter.getName());
+							filter = null;
+						}
+
+						if (loadBalancer != null) {
+							manoapi.removeVnf(vim,"DC",loadBalancer.getName());
+							loadBalancer = null;
+						}
 						break;
 					default:
 						break;
@@ -95,16 +149,5 @@ class Execute {
 			}
 		}
 		return null;
-        /*
-        if (plan.contentEquals(plans.get(0))) {
-            return workflow_lists.get(0).split("/");
-        } else if (plan.contentEquals(plans.get(1))) {
-            return workflow_lists.get(1).split("/");
-        } else if (plan.contentEquals(plans.get(2))) {
-            return workflow_lists.get(2).split("/");
-        } else
-            return null;
-
-         */
 	}
 }

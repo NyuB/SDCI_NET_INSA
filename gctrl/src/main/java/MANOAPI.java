@@ -1,6 +1,7 @@
 import api.vim.ComputeStart;
 import api.vim.VimEmuAPIEndpoint;
 import api.vim.Vnf;
+import api.EndpointInfo;
 import api.vnfconfig.VnfConfig;
 import api.vnfconfig.VnfConfigAPIEndpoint;
 
@@ -16,7 +17,7 @@ import java.util.Random;
  */
 class MANOAPI {
 
-	private static int PORT_DFLT = 8888;
+	private static int VNF_PORT_DFLT = 8888;
 	private static int RETRIES_DFLT = 5;
 	private static int RETRY_PERIOD_DFLT = 750;
 
@@ -44,7 +45,7 @@ class MANOAPI {
 		return ips;
 	}
 
-	public Vnf addLoadBalancingVnf(VimEmuAPIEndpoint vim, String ipA, int portA, String ipB, int portB, String dc, String name) {
+	public Vnf addDualLoadBalancerVnf(VimEmuAPIEndpoint vim, String ipA, int portA, String ipB, int portB, String dc, String name) {
 		ComputeStart computeStart = new ComputeStart();
 		computeStart.setImage(Knowledge.IMG_LB);
 		System.out.println("Sending vnf creation request " + computeStart.getImage());
@@ -52,12 +53,30 @@ class MANOAPI {
 		VnfConfig config = VnfConfig.ABConfig(ipA, portA, ipB, portB);
 		String allocatedIp = vnf.getNetwork().get(0).getIp();
 		String dockerIp = vnf.getDocker_network();
-		System.out.println("VNF created, IP allocated : " + allocatedIp + ":" + PORT_DFLT);
-		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, PORT_DFLT);
+		System.out.println("VNF created, IP allocated : " + allocatedIp + ":" + VNF_PORT_DFLT);
+		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, VNF_PORT_DFLT);
 		System.out.println("Sending configuration request to vnf");
 		vnfConfigAPIEndpoint.putRestConfig(config, RETRIES_DFLT, RETRY_PERIOD_DFLT);
 		System.out.println("Sent configuration to vnf");
 		return vnf;
+	}
+
+	public Vnf addMultiLoadBalancerVnf(VimEmuAPIEndpoint vim, String dc, String name){
+		ComputeStart computeStart = new ComputeStart();
+		computeStart.setImage(Knowledge.IMG_MLB);
+		System.out.println("Sending vnf creation request " + computeStart.getImage());
+		Vnf mlb = vim.putRestComputeStart(computeStart, dc, name);
+		String allocatedIp = mlb.getNetwork().get(0).getIp();
+		System.out.println("VNF created, IP allocated : " + allocatedIp + ":" + VNF_PORT_DFLT);
+		return mlb;
+	}
+
+	public void configMultiLoadBalancer(Vnf mlb, List<EndpointInfo> endpoints){
+		VnfConfig config = VnfConfig.EndpointsListConfig(endpoints);
+		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(mlb.getDocker_network(), VNF_PORT_DFLT);
+		System.out.println("Sending configuration request to vnf");
+		vnfConfigAPIEndpoint.putRestConfig(config, RETRIES_DFLT, RETRY_PERIOD_DFLT);
+		System.out.println("Sent configuration to vnf");
 	}
 
 	public Vnf addGatewayVnf(VimEmuAPIEndpoint vim, String remoteIp, int remotePort, String dc, String name) {
@@ -67,9 +86,9 @@ class MANOAPI {
 		Vnf vnf = vim.putRestComputeStart(computeStart, dc, name);
 		String ipWithoutMask = vnf.mnIP();
 		String dockerIp = vnf.getDocker_network();
-		System.out.println("VNF created, IP allocated : " + ipWithoutMask + ":" + PORT_DFLT);
+		System.out.println("VNF created, IP allocated : " + ipWithoutMask + ":" + VNF_PORT_DFLT);
 		VnfConfig config = VnfConfig.LocalRemoteConfig(ipWithoutMask, remoteIp, remotePort);
-		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, PORT_DFLT);
+		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, VNF_PORT_DFLT);
 		System.out.println("Sending configuration request to vnf");
 		vnfConfigAPIEndpoint.putRestConfig(config, RETRIES_DFLT, RETRY_PERIOD_DFLT);
 		System.out.println("Sent configuration to vnf");
@@ -83,9 +102,9 @@ class MANOAPI {
 		Vnf vnf = vim.putRestComputeStart(computeStart, dc, name);
 		String allocatedIp = vnf.getNetwork().get(0).getIp();
 		String dockerIp = vnf.getDocker_network();
-		System.out.println("VNF created, IP allocated : " + allocatedIp + ":" + PORT_DFLT);
+		System.out.println("VNF created, IP allocated : " + allocatedIp + ":" + VNF_PORT_DFLT);
 		VnfConfig config = VnfConfig.VipRemoteConfig(vip, remoteIp, remotePort);
-		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, PORT_DFLT);
+		VnfConfigAPIEndpoint vnfConfigAPIEndpoint = new VnfConfigAPIEndpoint(dockerIp, VNF_PORT_DFLT);
 		System.out.println("Sending configuration request to vnf");
 		vnfConfigAPIEndpoint.putRestConfig(config, RETRIES_DFLT, RETRY_PERIOD_DFLT);
 		System.out.println("Sent configuration to vnf");
@@ -100,7 +119,7 @@ class MANOAPI {
 		String allocatedIp = vnf.getNetwork().get(0).getIp();
 		String dockerIp = vnf.getDocker_network();
 		System.out.println("VNF created, IP allocated : " + allocatedIp);
-		System.out.println("Docker @ddr : " + dockerIp + ":" + PORT_DFLT);
+		System.out.println("Docker @ddr : " + dockerIp + ":" + VNF_PORT_DFLT);
 		return vnf;
 	}
 

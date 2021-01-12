@@ -47,13 +47,17 @@ class Analyze {
 		List<String> symptoms = Main.shared_knowledge.get_symptoms();
 		List<String> rfcs = Main.shared_knowledge.get_rfc();
 
-		if (symptom.contentEquals(symptoms.get(0)) || symptom.contentEquals(symptoms.get(2))) {
+		if (symptom.contentEquals(symptoms.get(0))) {// N/A ('Better than ok')
+			Main.logger(this.getClass().getSimpleName(), "RFC --> To plan : " + rfcs.get(2));
+			i = 0;
+			return rfcs.get(2);//Reset
+		} else if (symptom.contentEquals(symptoms.get(2))) {// OK
 			Main.logger(this.getClass().getSimpleName(), "RFC --> To plan : " + rfcs.get(0));
 			i = 0;
 			return rfcs.get(0);
-		} else if (symptom.contentEquals(symptoms.get(1))) {
+		} else if (symptom.contentEquals(symptoms.get(1))) {// NOK
 			i++;
-			if (i < 1000) {
+			if (i < 100) {
 				Main.logger(this.getClass().getSimpleName(), "RFC --> To plan : " + rfcs.get(1));
 				return rfcs.get(1);
 			} else {

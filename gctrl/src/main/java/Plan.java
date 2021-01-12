@@ -22,7 +22,7 @@ import java.util.List;
 class Plan {
 	private int nextPlan = 0;
 	public String gw_PLAN = "";
-	private int nbSymptoms;
+	private int nbSymptoms = 0;
 
 	void start() {
 		Main.logger(this.getClass().getSimpleName(), "Start Planning");
@@ -60,13 +60,13 @@ class Plan {
 			return plans.get(0);//Just wait instead of exiting immediatly
 			// Terminate JVM
 			//System.exit(0);
-		} else if (rfc.contentEquals(rfcs.get(0))) {
+		} else if (rfc.contentEquals(rfcs.get(0))) { // Wait
 			nbSymptoms = 0;
 			Main.logger(this.getClass().getSimpleName(), "No symptom detected, everything is OK");
 			Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(0));
 			//nextPlan = 0; Don't reset the plans until actual backward actions(e.g undeploying vnf) are implemented
 			return plans.get(0);
-		} else if (rfc.contentEquals(rfcs.get(1))) {
+		} else if (rfc.contentEquals(rfcs.get(1))) { // Act
 			nbSymptoms++;
 			boolean symptom_ko = nbSymptoms > 2;
 			Main.logger(this.getClass().getSimpleName(), "Consecutive alert symptoms : " + nbSymptoms);
@@ -86,6 +86,13 @@ class Plan {
 				Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(0));
 				return plans.get(0);
 			}
+		}
+		else if(rfc.contentEquals(rfcs.get(2))){ // Reset
+			nbSymptoms = 0;
+			nextPlan = 0;
+			Main.logger(this.getClass().getSimpleName(), "System in veryveryvery good shape, resource reallocation possible");
+			Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(plans.size()-1));
+			return plans.get(plans.size()-1);//Last plan should be the reset plan
 		}
 		return null;
 	}

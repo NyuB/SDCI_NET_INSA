@@ -70,5 +70,9 @@ class SDNCtrlAPI {
 
 	}
 
+	public void removeRule(RyuAPIEndpoint ryu, FlowRule rule){
+		ryu.postRestDeleteFlowRule(rule);
+	}
+
 
 }
