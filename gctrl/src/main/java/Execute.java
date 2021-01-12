@@ -122,9 +122,7 @@ class Execute {
 				}
 				Thread.sleep(2000);
 				continue;
-
 			}
-
 		}
 	}
 

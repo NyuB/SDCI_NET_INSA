@@ -3,6 +3,7 @@ const url = require('url');
 const forward = require('http-forward');
 
 var LOCAL_PORT = 8888;
+var ENDPOINTS = [];
 var ENDPOINT_A;//Must be configured
 var ENDPOINT_B;//------------------
 
