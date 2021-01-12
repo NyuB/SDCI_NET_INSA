@@ -117,7 +117,7 @@ def create_topology(httpmode=False):
     print("Waiting for GFB node to complete startup")
     time.sleep(2)
     print("Starting GFB devices")
-    GFB.cmd("start_devices 10.0.0.4 9001 8888 gwfb 1000")
+    GFB.cmd("start_devices 10.0.0.4 9001 8888 gwfb 1500")
     print("Starting GFC devices")
     GFC.cmd("startup --local_ip 10.0.0.5 --local_port 8888 --local_name gwfc --remote_ip 10.0.0.2 --remote_port 8888 --remote_name gwi")
     
