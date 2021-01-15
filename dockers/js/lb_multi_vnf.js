@@ -34,5 +34,6 @@ http.createServer(function (req, res) {
 		console.log(endpoint);
 		var urle = "http://"+ endpoint.ip + ":" + endpoint.port;
 		req.forward = {target:urle};
+		forward(req, res);
 	}
 }).listen(LOCAL_PORT);
