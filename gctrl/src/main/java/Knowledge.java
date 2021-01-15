@@ -58,10 +58,13 @@ class Knowledge {
 
 	public static final int switchA = 3;
 	public static final int switchB = 3;
+	public static final int switchC = 4;
 	public static final int portInA = 1;
 	public static final int portInB = 2;
 	public static final int portDCA = 3;
 	public static final int portDCB = 3;
+	public static final int portInC = 1;
+	public static final int portDCC = 2;
 
 	public static final String ipS = "10.0.0.1";
 	public static final int portS = 8888;
@@ -71,6 +74,8 @@ class Knowledge {
 	public static final int portGFA = 8888;
 	public static final String ipGFB = "10.0.0.4";
 	public static final int portGFB = 8888;
+	public static final String ipGFC = "10.0.0.5";
+	public static final int portGFC = 8888;
 
 	public static String monitoredIP = ipGI;
 	public static int monitoredPort = portGI;

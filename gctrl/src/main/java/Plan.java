@@ -71,7 +71,7 @@ class Plan {
 			boolean symptom_ko = nbSymptoms > 2;
 			Main.logger(this.getClass().getSimpleName(), "Consecutive alert symptoms : " + nbSymptoms);
 			if (symptom_ko) {
-				if (nextPlan == 0) {
+				if (nextPlan < 4) {
 					nextPlan++;
 					nbSymptoms = 0;
 					Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(1));
@@ -89,8 +89,8 @@ class Plan {
 		}
 		else if(rfc.contentEquals(rfcs.get(2))){ // Reset
 			nbSymptoms = 0;
-			//nextPlan = 0;
-			Main.logger(this.getClass().getSimpleName(), "System in veryveryvery good shape, resource reallocation possible");
+			nextPlan = 0;
+			Main.logger(this.getClass().getSimpleName(), "System in very good shape, resource reallocation possible");
 			Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(plans.size()-1));
 			return plans.get(plans.size()-1);//Last plan should be the reset plan
 		}

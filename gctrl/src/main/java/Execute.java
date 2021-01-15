@@ -49,7 +49,7 @@ class Execute {
 
 		while (Main.run) {
 			String current_plan = get_plan();
-
+			EndpointInfo gi = new EndpointInfo(Knowledge.ipGI,Knowledge.portGI);
 			// Main.logger(this.getClass().getSimpleName(), "Received Plan : " + current_plan);
 			String[] workflow = workflow_generator(current_plan);
 			for (int i = 0; i < workflow.length; i++) {
@@ -65,24 +65,34 @@ class Execute {
 						break;
 					case "UC2"://Deploy gw dedicated to gfa
 						setLastActionTimestamp(System.currentTimeMillis());
-						Main.logger(this.getClass().getSimpleName(), "Adding Dedicated Gateway in DC");
-						dedicatedGW = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gwUC2");
-						ipWithoutMask = dedicatedGW.mnIP();
-						Main.logger(this.getClass().getSimpleName(), "Redirecting GFA traffic to new GW");
-						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+						if(dedicatedGW == null){
+							Main.logger(this.getClass().getSimpleName(), "Adding Dedicated Gateway in DC");
+							dedicatedGW = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gwUC2");
+							ipWithoutMask = dedicatedGW.mnIP();
+							Main.logger(this.getClass().getSimpleName(), "Redirecting GFA traffic to new GW");
+							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));	
+						}
+						else {
+							Main.logger(this.getClass().getSimpleName(), "Gateway already added");
+						}
 						break;
+
 					case "UC3"://Filter non-gfa traffic
 						setLastActionTimestamp(System.currentTimeMillis());
-						Main.logger(this.getClass().getSimpleName(), "Adding filter in DC");
-						filter = manoapi.addFilterVnf(vim, Knowledge.ipGFA, Knowledge.ipGI, Knowledge.portGI, "DC", "filterUC3");
-						ipWithoutMask = filter.mnIP();
-						Main.logger(this.getClass().getSimpleName(), "Redirecting all gf traffics to vnf");
-						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
-						//activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+						if(filter==null){
+							Main.logger(this.getClass().getSimpleName(), "Adding filter in DC");
+							filter = manoapi.addFilterVnf(vim, Knowledge.ipGFA, Knowledge.ipGI, Knowledge.portGI, "DC", "filterUC3");
+							ipWithoutMask = filter.mnIP();
+							Main.logger(this.getClass().getSimpleName(), "Redirecting all gf traffics to vnf");
+							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchC, Knowledge.portDCC, Knowledge.portInC, Knowledge.ipGFC, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+						}
+						else{
+							Main.logger(this.getClass().getSimpleName(), "Filter already added");
+						}
 						break;
 					case "UC4"://Add a gateway to load balancing pool
 						setLastActionTimestamp(System.currentTimeMillis());
-						EndpointInfo gi = new EndpointInfo(Knowledge.ipGI,Knowledge.portGI);
 						if(loadBalancer == null){
 							Main.logger(this.getClass().getSimpleName(), "Adding multi-load-balancer in DC");
 							loadBalancer = manoapi.addMultiLoadBalancerVnf(vim, "DC","mlbUC4");
@@ -91,8 +101,14 @@ class Execute {
 							manoapi.configMultiLoadBalancer(loadBalancer, init);
 							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchC, Knowledge.portDCC, Knowledge.portInC, Knowledge.ipGFC, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						}
-
+						else{
+							Main.logger(this.getClass().getSimpleName(), "Load balancer already added");
+						}
+						break;
+					case "UC5":
+						setLastActionTimestamp(System.currentTimeMillis());
 						Main.logger(this.getClass().getSimpleName(), "Adding gateway to load-balancing pool in DC");
 						Vnf gateway = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gw_"+additionalGWs.size());
 						additionalGWs.add(gateway);
@@ -107,7 +123,7 @@ class Execute {
 					case "UC0":
 						long now = System.currentTimeMillis();
 						if(now - lastActionTimestamp > minimalDelayBeforeReset) {
-							Main.logger(this.getClass().getSimpleName(), "Reseting vnfs");
+							Main.logger(this.getClass().getSimpleName(), "Resetting vnfs");
 							setLastActionTimestamp(System.currentTimeMillis());
 							for (FlowRule rule : activeRules) {
 								sdnctlrapi.removeRule(ryu, rule);
@@ -134,6 +150,9 @@ class Execute {
 								manoapi.removeVnf(vim, "DC", loadBalancer.getName());
 								loadBalancer = null;
 							}
+						}
+						else{
+							Main.logger(this.getClass().getSimpleName(), "Wait before resetting vnfs");
 						}
 						break;
 					default:
