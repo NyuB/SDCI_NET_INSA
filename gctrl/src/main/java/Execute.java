@@ -65,14 +65,14 @@ class Execute {
 						ipWithoutMask = filter.mnIP();
 						Main.logger(this.getClass().getSimpleName(), "Redirecting all gf traffics to vnf");
 						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
-						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+						//activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						break;
 					case "UC4"://Add a gateway to load balancing pool
+						EndpointInfo gi = new EndpointInfo(Knowledge.ipGI,Knowledge.portGI);
 						if(loadBalancer == null){
 							Main.logger(this.getClass().getSimpleName(), "Adding multi-load-balancer in DC");
 							loadBalancer = manoapi.addMultiLoadBalancerVnf(vim, "DC","mlbUC4");
 							ipWithoutMask = loadBalancer.mnIP();
-							EndpointInfo gi = new EndpointInfo(Knowledge.ipGI,Knowledge.portGI);
 							List<EndpointInfo> init = Collections.singletonList(gi);
 							manoapi.configMultiLoadBalancer(loadBalancer, init);
 							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
@@ -80,14 +80,13 @@ class Execute {
 						}
 
 						Main.logger(this.getClass().getSimpleName(), "Adding gateway to load-balancing pool in DC");
-						Vnf gateway = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gw#"+additionalGWs.size());
+						Vnf gateway = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gw_"+additionalGWs.size());
 						additionalGWs.add(gateway);
 						List<EndpointInfo> infos = new ArrayList<>();
-
+						infos.add(gi);
 						for(Vnf gw : additionalGWs){
 							infos.add(new EndpointInfo(gw.mnIP(),8888));
 						}
-
 						Main.logger(this.getClass().getSimpleName(), "Configuring  the load-balancer with updated gateways list");
 						manoapi.configMultiLoadBalancer(loadBalancer, infos);
 						break;
