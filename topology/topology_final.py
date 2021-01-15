@@ -150,6 +150,6 @@ def main():
     	if k == "ping":
     		httpmode = False
     		
-    create_topology(httpmode = httpmode, port_default = default_port, device_rate = device_rate)
+    create_topology(httpmode = httpmode, port_default = port_default, device_rate = device_rate)
 if __name__ == '__main__':
     main()
