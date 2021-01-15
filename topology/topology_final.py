@@ -134,7 +134,7 @@ def main():
     for a in args:
     	opt = a.split("=")
     	k = opt[0]
-    	v = opt[1] if len(opt)>0 else None
+    	v = opt[1] if len(opt)>1 else None
     	if k == "mode" and v == "http":
     		httpmode = True
     	if k == "http":

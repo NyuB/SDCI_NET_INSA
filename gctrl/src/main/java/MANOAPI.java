@@ -124,6 +124,7 @@ class MANOAPI {
 	}
 
 	public void removeVnf(VimEmuAPIEndpoint vim, String dc, String vnfName){
+		System.out.println("Removing vnf "+vnfName+" from datacenter "+dc);
 		vim.delRestComputeStop(dc,vnfName);
 	}
 }

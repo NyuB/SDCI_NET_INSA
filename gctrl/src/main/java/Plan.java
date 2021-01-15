@@ -89,7 +89,7 @@ class Plan {
 		}
 		else if(rfc.contentEquals(rfcs.get(2))){ // Reset
 			nbSymptoms = 0;
-			nextPlan = 0;
+			//nextPlan = 0;
 			Main.logger(this.getClass().getSimpleName(), "System in veryveryvery good shape, resource reallocation possible");
 			Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(plans.size()-1));
 			return plans.get(plans.size()-1);//Last plan should be the reset plan

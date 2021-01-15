@@ -35,6 +35,10 @@ class Execute {
 	private static long lastActionTimestamp = 0L;
 	private static long minimalDelayBeforeReset = 30000L;
 
+	public static synchronized void setLastActionTimestamp(long timestamp){
+		lastActionTimestamp = timestamp;
+	}
+
 	public static synchronized void setMinimalDelayBeforeReset(long delay){
 		minimalDelayBeforeReset = delay;
 	}
@@ -60,7 +64,7 @@ class Execute {
 						Main.logger(this.getClass().getSimpleName(), "Nothing to do");
 						break;
 					case "UC2"://Deploy gw dedicated to gfa
-						lastActionTimestamp = System.currentTimeMillis();
+						setLastActionTimestamp(System.currentTimeMillis());
 						Main.logger(this.getClass().getSimpleName(), "Adding Dedicated Gateway in DC");
 						dedicatedGW = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gwUC2");
 						ipWithoutMask = dedicatedGW.mnIP();
@@ -68,7 +72,7 @@ class Execute {
 						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						break;
 					case "UC3"://Filter non-gfa traffic
-						lastActionTimestamp = System.currentTimeMillis();
+						setLastActionTimestamp(System.currentTimeMillis());
 						Main.logger(this.getClass().getSimpleName(), "Adding filter in DC");
 						filter = manoapi.addFilterVnf(vim, Knowledge.ipGFA, Knowledge.ipGI, Knowledge.portGI, "DC", "filterUC3");
 						ipWithoutMask = filter.mnIP();
@@ -77,7 +81,7 @@ class Execute {
 						//activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						break;
 					case "UC4"://Add a gateway to load balancing pool
-						lastActionTimestamp = System.currentTimeMillis();
+						setLastActionTimestamp(System.currentTimeMillis());
 						EndpointInfo gi = new EndpointInfo(Knowledge.ipGI,Knowledge.portGI);
 						if(loadBalancer == null){
 							Main.logger(this.getClass().getSimpleName(), "Adding multi-load-balancer in DC");
@@ -102,17 +106,19 @@ class Execute {
 						break;
 					case "UC0":
 						long now = System.currentTimeMillis();
-
 						if(now - lastActionTimestamp > minimalDelayBeforeReset) {
+							Main.logger(this.getClass().getSimpleName(), "Reseting vnfs");
+							setLastActionTimestamp(System.currentTimeMillis());
 							for (FlowRule rule : activeRules) {
 								sdnctlrapi.removeRule(ryu, rule);
-								activeRules.clear();
 							}
+							activeRules.clear();
 
 							for (Vnf gw : additionalGWs) {
 								manoapi.removeVnf(vim, "DC", gw.getName());
-								additionalGWs.clear();
+
 							}
+							additionalGWs.clear();
 
 							if (dedicatedGW != null) {
 								manoapi.removeVnf(vim, "DC", dedicatedGW.getName());

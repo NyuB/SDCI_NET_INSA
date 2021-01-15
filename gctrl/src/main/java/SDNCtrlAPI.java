@@ -71,6 +71,7 @@ class SDNCtrlAPI {
 	}
 
 	public void removeRule(RyuAPIEndpoint ryu, FlowRule rule){
+		System.out.println("Removing flow rule");
 		ryu.postRestDeleteFlowRule(rule);
 	}
 
