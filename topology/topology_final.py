@@ -51,8 +51,8 @@ def createHost(httpmode, net, name, image):
     else:
         return net.addHost(name)
 
-def create_topology(httpmode=False):
-    net = DCNetwork(monitor=False, enable_learning=True)
+def create_topology(httpmode = False, port_default = 8888, device_rate = 1500):
+    net = DCNetwork(monitor = False, enable_learning = True)
 
     DC = net.addDatacenter("DC")
 
@@ -76,7 +76,6 @@ def create_topology(httpmode=False):
     s5 = net.addSwitch('s5')
 
     S = createHost(httpmode, net, 'S', "host:server")
-    # Proxy = createHost(httpmode, net, 'Proxy')
     GI = createHost(httpmode, net, 'GI', "host:gateway")
     GFA = createHost(httpmode, net, 'GFA', "host:gwfinal")
     GFB = createHost(httpmode, net, 'GFB', "host:gwfinal")
@@ -111,16 +110,15 @@ def create_topology(httpmode=False):
     print("Waiting for GFA node to complete startup")
     time.sleep(2)
     print("Starting GFA devices")
-    GFA.cmd("start_devices 10.0.0.3 9001 8888 gwfa 1500")
+    GFA.cmd("start_devices 10.0.0.3 9001 {0} gwfa {1}".format(port_default, device_rate))
     print("Starting GFB node")
     GFB.cmd("startup --local_ip 10.0.0.4 --local_port 8888 --local_name gwfb --remote_ip 10.0.0.2 --remote_port 8888 --remote_name gwi")
     print("Waiting for GFB node to complete startup")
     time.sleep(2)
     print("Starting GFB devices")
-    GFB.cmd("start_devices 10.0.0.4 9001 8888 gwfb 1500")
-    print("Starting GFC devices")
+    GFB.cmd("start_devices 10.0.0.4 9001 {0} gwfb {1}".format(port_default, device_rate))
+    print("Starting GFC node")
     GFC.cmd("startup --local_ip 10.0.0.5 --local_port 8888 --local_name gwfc --remote_ip 10.0.0.2 --remote_port 8888 --remote_name gwi")
-    
     #Start the command line
     net.CLI()
     # when the user types exit in the CLI, we stop the emulator
@@ -129,7 +127,29 @@ def create_topology(httpmode=False):
 
 def main():
     args = sys.argv[1:]
-    httpmode = len(args)>0 and args[0] == "http"
-    create_topology(httpmode)
+    httpmode = False
+    device_rate = 1500
+    port_default = 8888
+    
+    for a in args:
+    	opt = a.split("=")
+    	k = opt[0]
+    	v = opt[1] if len(opt)>0 else None
+    	if k == "mode" and v == "http":
+    		httpmode = True
+    	if k == "http":
+    		httpmode = True
+    	if k == "rate":
+    		device_rate = int(v)
+    	if k == "port":
+    		default_port = int(v)
+    	if k== "demo":
+    		httpmode = True
+    		port_default = 8888
+    		device_rate = 1500
+    	if k == "ping":
+    		httpmode = False
+    		
+    create_topology(httpmode = httpmode, port_default = default_port, device_rate = device_rate)
 if __name__ == '__main__':
     main()
