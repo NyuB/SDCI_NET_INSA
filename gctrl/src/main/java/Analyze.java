@@ -25,7 +25,6 @@ class Analyze {
 
 			String current_symptom = get_symptom();
 			//Main.logger(this.getClass().getSimpleName(), "Received Symptom : " + current_symptom);
-
 			update_rfc(rfc_generator(current_symptom));
 		}
 	}

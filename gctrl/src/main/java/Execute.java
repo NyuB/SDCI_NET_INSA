@@ -32,6 +32,13 @@ class Execute {
 	private static List<FlowRule> activeRules = new ArrayList<>();
 	private static List<Vnf> additionalGWs = new ArrayList<>();
 
+	private static long lastActionTimestamp = 0L;
+	private static long minimalDelayBeforeReset = 30000L;
+
+	public static synchronized void setMinimalDelayBeforeReset(long delay){
+		minimalDelayBeforeReset = delay;
+	}
+
 	void start() throws InterruptedException {
 		Main.logger(this.getClass().getSimpleName(), "Start Execution");
 		workflow_lists = Main.shared_knowledge.get_worklow_lists();
@@ -53,6 +60,7 @@ class Execute {
 						Main.logger(this.getClass().getSimpleName(), "Nothing to do");
 						break;
 					case "UC2"://Deploy gw dedicated to gfa
+						lastActionTimestamp = System.currentTimeMillis();
 						Main.logger(this.getClass().getSimpleName(), "Adding Dedicated Gateway in DC");
 						dedicatedGW = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gwUC2");
 						ipWithoutMask = dedicatedGW.mnIP();
@@ -60,6 +68,7 @@ class Execute {
 						activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						break;
 					case "UC3"://Filter non-gfa traffic
+						lastActionTimestamp = System.currentTimeMillis();
 						Main.logger(this.getClass().getSimpleName(), "Adding filter in DC");
 						filter = manoapi.addFilterVnf(vim, Knowledge.ipGFA, Knowledge.ipGI, Knowledge.portGI, "DC", "filterUC3");
 						ipWithoutMask = filter.mnIP();
@@ -68,6 +77,7 @@ class Execute {
 						//activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchA, Knowledge.portDCA, Knowledge.portInA, Knowledge.ipGFA, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						break;
 					case "UC4"://Add a gateway to load balancing pool
+						lastActionTimestamp = System.currentTimeMillis();
 						EndpointInfo gi = new EndpointInfo(Knowledge.ipGI,Knowledge.portGI);
 						if(loadBalancer == null){
 							Main.logger(this.getClass().getSimpleName(), "Adding multi-load-balancer in DC");
@@ -91,29 +101,33 @@ class Execute {
 						manoapi.configMultiLoadBalancer(loadBalancer, infos);
 						break;
 					case "UC0":
-						for(FlowRule rule : activeRules){
-							sdnctlrapi.removeRule(ryu, rule);
-							activeRules.clear();
-						}
+						long now = System.currentTimeMillis();
 
-						for(Vnf gw : additionalGWs){
-							manoapi.removeVnf(vim,"DC", gw.getName());
-							additionalGWs.clear();
-						}
+						if(now - lastActionTimestamp > minimalDelayBeforeReset) {
+							for (FlowRule rule : activeRules) {
+								sdnctlrapi.removeRule(ryu, rule);
+								activeRules.clear();
+							}
 
-						if (dedicatedGW != null) {
-							manoapi.removeVnf(vim,"DC",dedicatedGW.getName());
-							dedicatedGW = null;
-						}
+							for (Vnf gw : additionalGWs) {
+								manoapi.removeVnf(vim, "DC", gw.getName());
+								additionalGWs.clear();
+							}
 
-						if (filter != null) {
-							manoapi.removeVnf(vim,"DC",filter.getName());
-							filter = null;
-						}
+							if (dedicatedGW != null) {
+								manoapi.removeVnf(vim, "DC", dedicatedGW.getName());
+								dedicatedGW = null;
+							}
 
-						if (loadBalancer != null) {
-							manoapi.removeVnf(vim,"DC",loadBalancer.getName());
-							loadBalancer = null;
+							if (filter != null) {
+								manoapi.removeVnf(vim, "DC", filter.getName());
+								filter = null;
+							}
+
+							if (loadBalancer != null) {
+								manoapi.removeVnf(vim, "DC", loadBalancer.getName());
+								loadBalancer = null;
+							}
 						}
 						break;
 					default:

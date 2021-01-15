@@ -65,6 +65,9 @@ class Main {
 		if(options.containsKey("mmode")){
 			Monitor.mode = Integer.parseInt(options.get("mmode"));
 		}
+		if(options.containsKey("reset")){
+			Execute.setMinimalDelayBeforeReset(Long.parseLong(options.get("reset")));
+		}
 
 		shared_knowledge.start();
 		Thread.sleep(3000);
