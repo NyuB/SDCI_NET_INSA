@@ -73,7 +73,6 @@ def create_topology(httpmode = False, port_default = 8888, device_rate = 1500):
     s2 = net.addSwitch('s2')
     s3 = net.addSwitch('s3')
     s4 = net.addSwitch('s4')
-    s5 = net.addSwitch('s5')
 
     S = createHost(httpmode, net, 'S', "host:server")
     GI = createHost(httpmode, net, 'GI', "host:gateway")
