@@ -30,6 +30,9 @@ class Knowledge {
 
 	static final int moving_wind = 10;
 	static final int horizon = 3;
+	static int monitorPeriod = 500; //Monitoring period 2000 au départ
+	static int loopPeriod = 2500;//period * 5
+	static int monitorMode = 1;
 	static final String gw = "GW_I";
 	static double gw_lat_threshold = 25;
 	static double gw_lat_inf_threshold = .0;

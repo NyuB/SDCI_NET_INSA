@@ -47,25 +47,25 @@ class Main {
 		Logger.getRootLogger().setLevel(Level.ERROR);
 
 		Map<String, String> options = parseOptions(args);
-		if (options.containsKey("uc")) {
+		if (options.containsKey("uc")) {//Plan to apply (UC2 : dedicated gw, UC3 : filter, UC4/UC5 : multi load-balancer)
 			Knowledge.setUseCase(1, options.get("uc"));
 		}
-		if (options.containsKey("sup")) {
+		if (options.containsKey("sup")) {//Threshold triggering action plan
 			Knowledge.gw_lat_threshold = Double.parseDouble(options.get("sup"));
 		}
-		if(options.containsKey("inf")){
+		if(options.containsKey("inf")){//Threshold triggering reset plan
 			Knowledge.gw_lat_inf_threshold = Double.parseDouble(options.get("inf"));
 		}
-		if(options.containsKey("lfreq")){
-			Monitor.loopPeriod = Integer.parseInt(options.get("lfreq"));
+		if(options.containsKey("lfreq")){//MAPE-K loop period (ms)
+			Knowledge.loopPeriod = Integer.parseInt(options.get("lfreq"));
 		}
-		if(options.containsKey("mfreq")){
-			Monitor.period= Integer.parseInt(options.get("mfreq"));
+		if(options.containsKey("mfreq")){//Monitoring period (ms)
+			Knowledge.monitorPeriod = Integer.parseInt(options.get("mfreq"));
 		}
-		if(options.containsKey("mmode")){
-			Monitor.mode = Integer.parseInt(options.get("mmode"));
+		if(options.containsKey("mmode")){//Monitoring metric(0 : cpu, 1 : ping)
+			Knowledge.monitorMode = Integer.parseInt(options.get("mmode"));
 		}
-		if(options.containsKey("reset")){
+		if(options.containsKey("reset")){//Minimal delay before applying reset plan
 			Execute.setMinimalDelayBeforeReset(Long.parseLong(options.get("reset")));
 		}
 

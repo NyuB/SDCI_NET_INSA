@@ -91,7 +91,7 @@ class Execute {
 							Main.logger(this.getClass().getSimpleName(), "Filter already added");
 						}
 						break;
-					case "UC4"://Add a gateway to load balancing pool
+					case "UC4"://Deploy load-balancer
 						setLastActionTimestamp(System.currentTimeMillis());
 						if(loadBalancer == null){
 							Main.logger(this.getClass().getSimpleName(), "Adding multi-load-balancer in DC");
@@ -107,7 +107,7 @@ class Execute {
 							Main.logger(this.getClass().getSimpleName(), "Load balancer already added");
 						}
 						break;
-					case "UC5":
+					case "UC5"://Add a gateway to load balancing pool
 						setLastActionTimestamp(System.currentTimeMillis());
 						Main.logger(this.getClass().getSimpleName(), "Adding gateway to load-balancing pool in DC");
 						Vnf gateway = manoapi.addGatewayVnf(vim, Knowledge.ipS, Knowledge.portS, "DC", "gw_"+additionalGWs.size());

@@ -36,6 +36,19 @@ class SDNCtrlAPI {
 		return status;
 	}
 
+	/**
+	 * Insert an host(e.g vnf) between two other hosts, for communication initiated by host Src to host Dest
+	 * @param ryu Ryu REST endpoint to apply flow rule updates
+	 * @param switchId dpid of the targeted openVswitch
+	 * @param switchToMidPort port of the switch directed to the inserted host
+	 * @param switchToSrcPort port of the switch directed to the source host
+	 * @param ipSrc ip of the source host
+	 * @param ipMid ip of the inserted host
+	 * @param ipDest ip of the initial target of the communication
+	 * @param portMid port of the inserted host
+	 * @param portDest port of the initial target of the communication
+	 * @return the flow rules added to ensure transparent insertion
+	 */
 	public List<FlowRule> vnfInTheMiddle(RyuAPIEndpoint ryu, int switchId, int switchToMidPort, int switchToSrcPort, String ipSrc, String ipMid, String ipDest, int portMid, int portDest) {
 		//First rule : redirect request from src to server
 		Match firstMatch = Match.Ipv4SrcDest(ipSrc, ipDest);
@@ -67,7 +80,6 @@ class SDNCtrlAPI {
 		second.setMatch(secondMatch);
 		ryu.postRestAddFlowRule(second);
 		return Arrays.asList(first, second);
-
 	}
 
 	public void removeRule(RyuAPIEndpoint ryu, FlowRule rule){
