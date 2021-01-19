@@ -119,6 +119,8 @@ def create_topology(httpmode = False, port_default = 8888, device_rate = 1500):
     print("Starting GFC node")
     GFC.cmd("startup --local_ip 10.0.0.5 --local_port 8888 --local_name gwfc --remote_ip 10.0.0.2 --remote_port 8888 --remote_name gwi")
     print("Waiting for GFC node to complete startup")
+    time.sleep(2)
+    print("Starting GFC devices")
     GFC.cmd("start_devices 10.0.0.5 9001 {0} gwfc {1}".format(port_default, device_rate))
     #Start the command line
     net.CLI()
