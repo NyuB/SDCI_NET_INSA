@@ -71,7 +71,7 @@ class Plan {
 			boolean symptom_ko = nbSymptoms > 2;
 			Main.logger(this.getClass().getSimpleName(), "Consecutive alert symptoms : " + nbSymptoms);
 			if (symptom_ko) {
-				if (nextPlan < 4) {
+				if (nextPlan < 15) {//Stop applying plans after several tries
 					nextPlan++;
 					nbSymptoms = 0;
 					Main.logger(this.getClass().getSimpleName(), "Plan --> To Execute : " + plans.get(1));

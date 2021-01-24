@@ -31,6 +31,8 @@ class Execute {
 	private static Vnf loadBalancer = null;
 	private static List<FlowRule> activeRules = new ArrayList<>();
 	private static List<Vnf> additionalGWs = new ArrayList<>();
+	public static boolean filterB = false;
+	public static boolean filterC = false;
 
 	private static long lastActionTimestamp = 0L;
 	private static long minimalDelayBeforeReset = 30000L;
@@ -83,12 +85,25 @@ class Execute {
 							Main.logger(this.getClass().getSimpleName(), "Adding filter in DC");
 							filter = manoapi.addFilterVnf(vim, Knowledge.ipGFA, Knowledge.ipGI, Knowledge.portGI, "DC", "filterUC3");
 							ipWithoutMask = filter.mnIP();
-							Main.logger(this.getClass().getSimpleName(), "Redirecting all gf traffics to vnf");
-							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
-							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchC, Knowledge.portDCC, Knowledge.portInC, Knowledge.ipGFC, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
 						}
 						else{
 							Main.logger(this.getClass().getSimpleName(), "Filter already added");
+						}
+
+						if(!filterB){
+							ipWithoutMask = filter.mnIP();
+							Main.logger(this.getClass().getSimpleName(), "Redirecting all gfB traffics to filter");
+							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchB, Knowledge.portDCB, Knowledge.portInB, Knowledge.ipGFB, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+							filterB = true;
+						}
+						else if(!filterC){
+							ipWithoutMask = filter.mnIP();
+							Main.logger(this.getClass().getSimpleName(), "Redirecting all gfC traffics to filter");
+							activeRules.addAll(sdnctlrapi.vnfInTheMiddle(ryu, Knowledge.switchC, Knowledge.portDCC, Knowledge.portInC, Knowledge.ipGFC, ipWithoutMask, Knowledge.ipGI, 8888, 8888));
+							filterC = true;
+						}
+						else {
+							Main.logger(this.getClass().getSimpleName(), "GFB and GFC traffic already filtered");
 						}
 						break;
 					case "UC4"://Deploy load-balancer

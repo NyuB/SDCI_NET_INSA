@@ -19,9 +19,9 @@ http.createServer(function (req, res) {
   		//Parse Json request and apply configuration
   		req.on('end', () => {
     		parsed = JSON.parse(data);
-    		ENDPOINTS = parsed.endpoints;
-    		index = 0;
-    		range = ENDPOINTS.length;
+    		ENDPOINTS = parsed.endpoints; //Update the list of gateways available
+    		index = 0;//Reset the next gateway index
+    		range = ENDPOINTS.length;//Update the number of gateways available
     		configured = (range > 0);
 		});
 		res.write("Ack\n");
